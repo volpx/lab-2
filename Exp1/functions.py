@@ -101,7 +101,7 @@ class DataXY:
         
         res = self.y - (self.getModelAB())
         
-        dy = np.sqrt(self.dy**2 + B*self.dx**2)
+        dy = np.sqrt(self.dy**2 + (B*self.dx)**2)
         
         ax_bot = fig.add_subplot(2,1,2)
         ax_bot.errorbar(self.x,res,self.dy)
