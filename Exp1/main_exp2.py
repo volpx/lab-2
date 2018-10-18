@@ -5,7 +5,7 @@ Created on Thu Oct 11 09:57:32 2018
 
 @author: volpe
 """
-#
+
 import pandas as pd
 from functions import DataXY
 import numpy as np
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from uncertainties import ufloat
 
 from functions import DataXY
-#
+
 data=[pd.read_csv("data/AmpMon10V5mA.csv"),
          pd.read_csv("data/AmpMon2V0.5mA.csv"),
          pd.read_csv("data/AmpVal10V5mA.csv"),
