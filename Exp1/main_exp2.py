@@ -49,5 +49,3 @@ dataseries[1].getFitPlot()[0].savefig("data/AmpMon2V0.5mA.svg")
 dataseries[2].getFitPlot()[0].savefig("data/AmpVal10V5mA.svg")
 dataseries[3].getFitPlot()[0].savefig("data/AmpVal2V0.5mA.svg")
 
-if __name__ == "__main__":
-    main()
