@@ -5,7 +5,7 @@ Created on Thu Oct 11 09:57:32 2018
 
 @author: volpe
 """
-
+r
 from functions import DataXY
 import numpy as np
 import matplotlib.pyplot as plt
