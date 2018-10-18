@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from uncertainties import ufloat
 
 from functions import DataXY
-
+#
 data=[pd.read_csv("data/AmpMon10V5mA.csv"),
          pd.read_csv("data/AmpMon2V0.5mA.csv"),
          pd.read_csv("data/AmpVal10V5mA.csv"),
