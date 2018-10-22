@@ -9,6 +9,7 @@ Created on Thu Oct 11 09:07:26 2018
 ## Library of functions
 import numpy as np
 import matplotlib.pyplot as plt
+from uncertainties import ufloat
 
 def w_mean(data,weigth=None):
     if weigth.any():
@@ -51,8 +52,8 @@ def cov(a,b,ddof=0):
 
 class DataXY:
     def __init__(self,x,y,dx=0,dy=0,name="DataXY",x_label="x",y_label="y"):
-        self.x=x
-        self.y=y
+        self.x=np.array(x)
+        self.y=np.array(y)
         self.dx=dx*np.ones(len(x))
         self.dy=dy*np.ones(len(x))
         self.x_label=x_label
@@ -81,11 +82,15 @@ class DataXY:
         return A,B,dA,dB
 
 
-    def getChi2(self):
-        return np.sum(((self.getModel() - self.y)**2)/(self.dy**2))
+    def getChi2(self,dy_prop=False):
+        A,B,dA,dB = self.getLinearRegressionAB()
+        if dy_prop:
+            return np.sum(((self.getModel() - self.y)**2)/(self.dy**2 + (B*self.dx)**2))
+        else:
+            return np.sum(((self.getModel() - self.y)**2)/(self.dy**2))
 
-    def getChi2Red(self,ddof=0):
-        return self.getChi2()/(len(self.x)-ddof)
+    def getChi2Red(self,ddof=0,dy_prop=False):
+        return self.getChi2(dy_prop=dy_prop)/(len(self.x)-ddof)
 
     def getModel(self,x=None):
         A,B,dA,dB = self.getLinearRegressionAB()
@@ -94,7 +99,7 @@ class DataXY:
         else:
             return A+B*x
 
-    def getFitPlot(self,fmt="b.",fmt_m="r,-",x_lim=None):
+    def getFitPlot(self,fmt="b.",fmt_m="r,-",x_lim=None,save=False):
         A,B,dA,dB = self.getLinearRegressionAB()
 
         fig,(ax_top,ax_bot) = plt.subplots(2,1, gridspec_kw={'height_ratios':[3,1]})
@@ -120,6 +125,13 @@ class DataXY:
         ax_bot.set_ylabel("Res "+self.y_label)
         ax_bot.set_xlabel(self.x_label)
         ax_bot.grid()
-
-
+        ax_bot.ticklabel_format(style="sci",scilimits=(0,0))
+        fig.savefig("data/"+self.name+".pdf",bbox_inches="tight")
         return fig,(ax_top,ax_bot)
+
+    def prettyPrint(self,ddof=0,dy_prop=False):
+        A,B,dA,dB = self.getLinearRegressionAB()
+        print("\nName =",self.name)
+        print("y = A+Bx =",ufloat(A,dA),"+",ufloat(B,dB),"x")
+        print("Chi2 =",self.getChi2(dy_prop=dy_prop))
+        print("Chi2Red =",self.getChi2Red(ddof=ddof,dy_prop=dy_prop))
