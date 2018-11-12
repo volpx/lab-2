@@ -55,8 +55,8 @@ class DataXY:
     def __init__(self,
                  x,
                  y,
-                 dx=0,
-                 dy=0,
+                 dx=1,
+                 dy=1,
                  name="DataXY",
                  x_label="x",
                  y_label="y",
@@ -71,11 +71,70 @@ class DataXY:
         self.color=color
 
     @classmethod
-    def from_csv_file(cls,filename,*args,**kwargs):
+    def from_csv_file(cls,filename,x_col=0,y_col=1,*args,**kwargs):
         # works for oscilloscope csv output
         df=pd.read_csv(filename,header=1)
         col=df.columns
-        return cls(df[col[0]], df[col[1]], x_label=col[0], y_label=col[1],*args,**kwargs)
+        return cls(df[col[x_col]], df[col[y_col]], x_label=col[x_col], y_label=col[y_col],*args,**kwargs)
+
+    @classmethod
+    def from_csv_file_special0(cls,
+                               filename,
+                               x_col=0,
+                               y_col=1,
+                               y_min=-np.inf,
+                               y_max=np.inf,
+                               middle=0.5,
+                               *args,**kwargs):
+        # works for oscilloscope csv output
+        df=pd.read_csv(filename,header=1)
+        col=df.columns
+
+        #start in the middle and find min and max index
+        l=df[col[x_col]].size
+
+        i_min=int(middle*l)
+        while (i_min > 0 and (y_min < df[col[y_col]][i_min] < y_max) ):
+            i_min-=1
+        i_max=l//2
+        while (i_max < l and (y_min < df[col[y_col]][i_max] < y_max) ):
+            i_max+=1
+
+        return cls(df[col[x_col]][i_min:i_max].values,
+                   df[col[y_col]][i_min:i_max].values,
+                   x_label=col[x_col], y_label=col[y_col],*args,**kwargs)
+
+    @classmethod
+    def from_csv_file_special1(cls,
+                               filename,
+                               x_col=0,
+                               y_col=1,
+                               y_min=-np.inf,
+                               y_max=np.inf,
+                               middle=0.5,
+                               *args, **kwargs):
+        # works for oscilloscope csv output
+        df=pd.read_csv(filename,header=0,skiprows=[1])
+        col=df.columns
+        if isinstance(y_col,int):
+            y_col=col[y_col]
+        if isinstance(x_col,int):
+            x_col=col[x_col]
+
+        #start in the middle and find min and max index
+        l=df[x_col].size
+
+        i_min=int(middle*l)
+        while (i_min > 0 and (y_min < df[y_col][i_min] < y_max) ):
+            i_min-=1
+        i_max=l//2
+        while (i_max < l and (y_min < df[y_col][i_max] < y_max) ):
+            i_max+=1
+
+        return cls(df[x_col][i_min:i_max].values,
+                   df[y_col][i_min:i_max].values,
+                   x_label=x_col, y_label=y_col,*args,**kwargs)
+
 
     def get_linear_regression_AB(self,w=None):
         if w is None:
@@ -98,6 +157,47 @@ class DataXY:
         dB= np.sqrt(np.sum(w)/dw)
         return A,B,dA,dB
 
+    def get_general_regression(self,F,y):
+        """
+            F : coefficients NxM array, the columns are the f(x) or f(y), the rows are the different points
+        """
+        # N=number of points
+        N=F.size(0)
+        # M=number of functions
+        M=F.size(1)
+
+        # array of data (?)
+        V=np.empty( (M,) )
+        # correlation smth (?)
+        G=np.empty( (M,M) )
+
+        # each element is the sum of the sum(f(x,y)*y/err**2) (?)
+        V = np.sum( F * y / (err**2), axis=0)
+
+        # calculating correlation matrix
+        for i in range(M):
+            for j in range(M):
+                G[i,j] = np.sum( F[:,i] * F[:,j] / (err**2))
+
+        C = np.inv(G)
+
+        # matrix multiplication product
+        fit_out = C @ V
+        y_fit = F @ fit_out
+        y_res = y - y_fit
+        dy_mean = np.sum(y_res) / ( y.size - fit_out.size )
+
+        # calculate chi2red
+        dof = y.size - fit_out.size
+        chi2red=np.sum(y_res ** 2 / err**2) / dof
+
+        if False: #dunno what
+            C *= chi2red
+
+        # C is square
+        dfit_out = np.sqrt((np.eye(C.shape[0])*C) @ np.ones(C.shape[0]))
+
+        dy=np.sqrt(np.sum( y_res**2 )/dof)
 
     def get_chi2(self,dy_prop=False):
         A,B,dA,dB = self.get_linear_regression_AB()
@@ -116,6 +216,33 @@ class DataXY:
         else:
             x=np.array(x)
             return A+B*x
+
+    def get_plot(self,
+                   fmt="b.",
+                   x_lim=None,
+                   save=False,
+                   sci=True,
+                   err=False,
+                   out_folder="data/"):
+
+        fig = plt.figure()
+        ax=fig.add_subplot(1,1,1)
+        fig.suptitle(self.name)
+
+        if err:
+            ax.errorbar(self.x,self.y,xerr=self.dx,yerr=self.dy,fmt=fmt)
+        else:
+            ax.plot(self.x,self.y,fmt)
+
+        ax.set_ylabel(self.y_label)
+        ax.set_xlabel(self.x_label)
+        ax.grid()
+        if sci:
+            ax.ticklabel_format(style="sci",scilimits=(0,0))
+
+        if save:
+            fig.savefig(out_folder+self.name+".pdf",bbox_inches="tight")
+        return fig, ax
 
     def get_fit_plot(self,
                    fmt="b.",
@@ -181,7 +308,7 @@ class DataXY:
             fig.savefig("data/"+title+".pdf",bbox_inches="tight")
 
 class DataX:
-    def __init__(self,x,dx=0,name="DataX",x_label="x"):
+    def __init__(self,x,dx=1,name="DataX",x_label="x"):
         self.x=np.array(x)
         self.dx=dx*np.ones(len(x))
         self.x_label=x_label
@@ -259,3 +386,14 @@ class DataX:
         print("WMean x =",ufloat(Mw,dMw))
         print("Chi2 =",self.get_chi2())
         print("Chi2Red =",self.get_chi2_red(ddof=ddof))
+
+class DataSetXY:
+    def __init__(self,name="DataSetXY",data=[]):
+        self.name=name
+        self.data=data
+
+    @classmethod
+    def from_csv_files(cls,filenames,*args,**kwargs):
+        data=[]
+        for fn in filenames:
+            data.append(DataXY.from_csv_file(fn,*args,**kwargs))

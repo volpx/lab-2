@@ -12,4 +12,16 @@ import matplotlib.pyplot as plt
 from uncertainties import ufloat
 from functions import DataXY
 
-x=DataXY.from_csv_file("data/scope_1.csv",name="data0",color="eovn")
+fn="sc_{n}cap_r{s}c{t}.csv"
+scope_folder="data/raw_data_from_scope/"
+out_folder="data/"
+
+for n in ["","no"]:
+    for s in range(1,5+1):
+        for t in range(0,6):
+            print("File:","{n} cap, serie {s}, try {t}".format(n=n,s=s,t=t))
+            x=DataXY.from_csv_file_special1(scope_folder+fn.format(n=n,s=s,t=t),
+                                            name="{n} cap, serie {s}, try {t}".format(n=n,s=s,t=t),
+                                            color="b",
+                                            y_col="2",
+                                            dx=0,dy=0).get_plot(save=True,out_folder=out_folder)

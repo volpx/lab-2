@@ -8,7 +8,6 @@ Created on Thu Oct 11 09:07:26 2018
 
 ## Library of functions
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from uncertainties import ufloat
 
@@ -79,12 +78,6 @@ class DataXY:
         # save a name for the frame
         self.name=name
 
-    @classmethod
-    def fromCSVfile(cls,filename,name="DataXY"):
-        df=pd.read_csv(filename,header=1)
-        col=df.columns
-        return cls(df[col[0]], df[col[1]], name=name, x_label=col[0], y_label=col[1])
-
     def getLinearRegressionAB(self,w=None):
         """
             do the normal linear regression on the class with w=1/dy^2 if not given
@@ -146,7 +139,7 @@ class DataXY:
         fig,(ax_top,ax_bot) = plt.subplots(2,1, gridspec_kw={'height_ratios':[3,1]})
         # set title
         fig.suptitle(self.name)
-
+        
         # plot my data
         ax_top.errorbar(self.x,self.y,xerr=self.dx,yerr=self.dy,fmt=fmt)
         # take the current x limits of the plot area for later if not passed
@@ -164,12 +157,12 @@ class DataXY:
         ax_top.grid()
         # set ticks with scientific notation
         ax_top.ticklabel_format(style="sci",scilimits=(0,0))
-
+        
         #get residues
         res = self.y - self.getModel()
         # get propagated uncertainty
         dy_propagated = np.sqrt(self.dy**2 + (B*self.dx)**2)
-
+        
         #plot residues with their uncertainties
         ax_bot.errorbar(self.x,res,yerr=dy_propagated,xerr=self.dx,fmt=fmt)
         # plot an horizontal line at y=0 representing the model here
