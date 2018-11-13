@@ -135,6 +135,32 @@ class DataXY:
                    df[y_col][i_min:i_max].values,
                    x_label=x_col, y_label=y_col,*args,**kwargs)
 
+    @classmethod
+    def from_csv_file_special2(cls,
+                               filename,
+                               x_col=0,
+                               y_col=1,
+                               i_min=0,
+                               i_max=None,
+                               middle=0.5,
+                               *args, **kwargs):
+        # works for oscilloscope csv output
+        df=pd.read_csv(filename,header=0,skiprows=[1])
+        col=df.columns
+        if isinstance(y_col,int):
+            y_col=col[y_col]
+        if isinstance(x_col,int):
+            x_col=col[x_col]
+
+        #start in the middle and find min and max index
+        l=df[x_col].size
+        if i_max is None:
+            i_max=l
+
+        return cls(df[x_col][i_min:i_max].values,
+                   df[y_col][i_min:i_max].values,
+                   x_label=x_col, y_label=y_col,*args,**kwargs)
+
 
     def get_linear_regression_AB(self,w=None):
         if w is None:
@@ -157,29 +183,36 @@ class DataXY:
         dB= np.sqrt(np.sum(w)/dw)
         return A,B,dA,dB
 
-    def get_general_regression(self,F,y):
+    def get_general_regression(self,F,y=None,dy=None):
+        # TODO: place this either as a static method with non-static wrap or directly outside the class
         """
             F : coefficients NxM array, the columns are the f(x) or f(y), the rows are the different points
         """
-        # N=number of points
-        N=F.size(0)
-        # M=number of functions
-        M=F.size(1)
+        if y is None:
+            y=self.y
+        if dy is None:
+            dy=self.dy
 
-        # array of data (?)
+        dy=dy*np.ones(y.size)
+
+        # N=number of points
+        N=F.shape[0]
+        # M=number of functions
+        M=F.shape[1]
+
+        # array of... data (?)
         V=np.empty( (M,) )
         # correlation smth (?)
         G=np.empty( (M,M) )
 
-        # each element is the sum of the sum(f(x,y)*y/err**2) (?)
-        V = np.sum( F * y / (err**2), axis=0)
-
         # calculating correlation matrix
         for i in range(M):
+            # each element is the sum(f(x,y)*y/dy**2) (?)
+            V[i] = np.sum( F[:,i] * y / (dy**2))
             for j in range(M):
-                G[i,j] = np.sum( F[:,i] * F[:,j] / (err**2))
+                G[i,j] = np.sum( F[:,i] * F[:,j] / (dy**2))
 
-        C = np.inv(G)
+        C = np.linalg.inv(G)
 
         # matrix multiplication product
         fit_out = C @ V
@@ -189,7 +222,7 @@ class DataXY:
 
         # calculate chi2red
         dof = y.size - fit_out.size
-        chi2red=np.sum(y_res ** 2 / err**2) / dof
+        chi2red=np.sum(y_res ** 2 / dy**2) / dof
 
         if False: #dunno what
             C *= chi2red
