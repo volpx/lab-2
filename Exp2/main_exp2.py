@@ -30,7 +30,7 @@ i_min_a=np.array(
         [ 944,  943,  943,  943,  943,  943],
         [1013, 1018, 1020, 1017, 1015, 1018],
         [1746, 1746, 1746, 1745, 1745, 1746]]])
-i_max_a=np.array(
+i_max_a=np.array( #2.5 tau_n
       [[[14669, 14670, 14668, 14666, 14669, 14669],
         [14635, 14636, 14635, 14634, 14636, 14637],
         [13795, 13795, 13795, 13795, 13796, 13796],
@@ -53,6 +53,10 @@ for ni,n in enumerate(["","no"]):
 
             df=pd.read_csv(scope_folder+fn.format(n=n,s=s,t=t),header=0,skiprows=[1])
 
+            tau_n = (cap_n if ni==0 else nocap_n) * rs_dmm[s-1]
+            i_min=i_min_a[ni][s-1][t]
+#            i_max=i_max_a[ni][s-1][t]
+            tm_off=df["x-axis"][i_min]
 
             #find the start of discharging index
 #            tresh=4
@@ -61,14 +65,10 @@ for ni,n in enumerate(["","no"]):
 #                i+=1
 #            i_min=i
             #find the 2.5 tau index
-#            while (df["x-axis"][i]<tm_off+2.5*tau):
-#                i+=1
-#            i_max=i
+            while (df["x-axis"][i]<tm_off+2*tau_n):
+                i+=1
+            i_max=i
 
-            tau_n = (cap_n if ni==0 else nocap_n) * rs_dmm[s-1]
-            i_min=i_min_a[ni][s-1][t]
-            i_max=i_max_a[ni][s-1][t]
-            tm_off=df["x-axis"][i_min]
 
             dat=DataXY.from_csv_file_special2(scope_folder+fn.format(n=n,s=s,t=t),
                                             name="{n} cap, serie {s}, try {t}".format(n=n,s=s,t=t),
@@ -78,7 +78,7 @@ for ni,n in enumerate(["","no"]):
                                             i_max=i_max,
                                             dx=0,dy=0)
             dat.x=dat.x-tm_off
-            dat.y=np.log(dat.y)
+            dat.y=np.log(np.abs(dat.y))
             F=np.vstack([ np.ones(dat.x.size), dat.x, 1/dat.y]).T
             lam=dat.get_general_regression(F,dy=1)
             pass

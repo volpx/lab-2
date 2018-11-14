@@ -216,6 +216,8 @@ class DataXY:
 
         # matrix multiplication product
         fit_out = C @ V
+        print(fit_out)
+        return
         y_fit = F @ fit_out
         y_res = y - y_fit
         dy_mean = np.sum(y_res) / ( y.size - fit_out.size )
