@@ -18,6 +18,9 @@ out_folder="data/"
 
 rs_n=np.array([1e3,1e4,1e5,3e4,3.73e5])
 rs_dmm=np.array([998.2,9.917e3,99.66e3,29.82e3,373.2e3])
+cap_n=50e-9
+nocap_n=176e-12
+
 i_min_a=np.array(
       [[[2191, 2192, 2190, 2188, 2191, 2191],
         [2238, 2239, 2238, 2237, 2239, 2240],
@@ -42,8 +45,16 @@ i_max_a=np.array( #2.5 tau_n
         [ 8775,  8774,  8774,  8774,  8774,  8774],
         [ 7742,  7747,  7749,  7746,  7744,  7747],
         [11130, 11130, 11130, 11129, 11129, 11130]]])
-cap_n=50e-9
-nocap_n=176e-12
+
+# scope settings
+v_div=np.array(
+      [[2,2,2,2,1.32],
+       [1.32,1.32,1.32,1.32,1.2]])
+
+t_div=np.array(
+      [[20e-6,200e-6,2e-3,500e-6,5.8e-3],
+       [124e-9,980e-9,11.2e-6,3.9e-6,35e-6]])
+
 
 for ni,n in enumerate(["","no"]):
     pass
@@ -55,7 +66,7 @@ for ni,n in enumerate(["","no"]):
 
             tau_n = (cap_n if ni==0 else nocap_n) * rs_dmm[s-1]
             i_min=i_min_a[ni][s-1][t]
-#            i_max=i_max_a[ni][s-1][t]
+            i_max=i_max_a[ni][s-1][t]
             tm_off=df["x-axis"][i_min]
 
             #find the start of discharging index
@@ -65,21 +76,26 @@ for ni,n in enumerate(["","no"]):
 #                i+=1
 #            i_min=i
             #find the 2.5 tau index
-            while (df["x-axis"][i]<tm_off+2*tau_n):
-                i+=1
-            i_max=i
+#            while (df["x-axis"][i]<tm_off+2*tau_n):
+#                i+=1
+#            i_max=i
 
 
-            dat=DataXY.from_csv_file_special2(scope_folder+fn.format(n=n,s=s,t=t),
-                                            name="{n} cap, serie {s}, try {t}".format(n=n,s=s,t=t),
-                                            color="b",
-                                            y_col="2",
-                                            i_min=i_min,
-                                            i_max=i_max,
-                                            dx=0,dy=0)
+            dat=DataXY.from_csv_file_special2(
+                    scope_folder+fn.format(n=n,s=s,t=t),
+                    name="{n} cap, serie {s}, try {t}".format(n=n,s=s,t=t),
+                    color="b",
+                    y_col="2",
+                    i_min=i_min,
+                    i_max=i_max,
+                    dx=8e-4*10*t_div[ni,s-1],
+                    dy=8*0.03*v_div[ni,s-1])
+            #remove time offset
             dat.x=dat.x-tm_off
+            #logging the y axis
+            dat.dy=dat.dy/dat.y
             dat.y=np.log(np.abs(dat.y))
             F=np.vstack([ np.ones(dat.x.size), dat.x, 1/dat.y]).T
-            lam=dat.get_general_regression(F,dy=1)
+            print(dat.get_general_regression(F,plot_save=True,pp=True))
             pass
 

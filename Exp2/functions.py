@@ -183,8 +183,16 @@ class DataXY:
         dB= np.sqrt(np.sum(w)/dw)
         return A,B,dA,dB
 
-    def get_general_regression(self,F,y=None,dy=None):
-        # TODO: place this either as a static method with non-static wrap or directly outside the class
+    # TODO: place this either as a static method with non-static wrap or directly outside the class
+    def get_general_regression(
+            self,
+            F,
+            y=None,
+            dy=None,
+            plot_save=False,
+            fmt="b,",
+            fmt_m="r,",
+            pp=False):
         """
             F : coefficients NxM array, the columns are the f(x) or f(y), the rows are the different points
         """
@@ -215,24 +223,68 @@ class DataXY:
         C = np.linalg.inv(G)
 
         # matrix multiplication product
-        fit_out = C @ V
-        print(fit_out)
-        return
-        y_fit = F @ fit_out
+        lam = C @ V
+        # C is square
+        dlam = np.sqrt((np.eye(C.shape[0])*C) @ np.ones(C.shape[0]))
+        # y of the model
+        y_fit = F @ lam
+        # residuals
         y_res = y - y_fit
-        dy_mean = np.sum(y_res) / ( y.size - fit_out.size )
+
+        dof = y.size - lam.size
+
+        # calculate mean of residuals
+        y_res_m = np.sum(y_res) / ( dof )
+        y_res_rms=np.sqrt(np.sum( y_res**2 )/dof)
 
         # calculate chi2red
-        dof = y.size - fit_out.size
         chi2red=np.sum(y_res ** 2 / dy**2) / dof
 
         if False: #dunno what
             C *= chi2red
 
-        # C is square
-        dfit_out = np.sqrt((np.eye(C.shape[0])*C) @ np.ones(C.shape[0]))
+        if pp:
+            print('Fit results:')
+            print('  chi2red:',chi2red,'@ dof:',dof)
+            print('  y_res_m:',y_res_m)
+            print('  y_res_rms:',y_res_rms)
+            print('  lam:')
+            for i in range(lam.size):
+                print('    {i})'.format(i=i),ufloat(lam[i],dlam[i]))
 
-        dy=np.sqrt(np.sum( y_res**2 )/dof)
+        if plot_save:
+
+            fig,(ax_top,ax_bot) = plt.subplots(2,1, gridspec_kw={'height_ratios':[3,1]})
+            fig.suptitle(self.name)
+
+
+            #mod
+#            ax_top.set_yscale('log')
+            #ax_top.set_xscale('log')
+#            ax_bot.set_yscale('log')
+            #ax_bot.set_xscale('log')
+
+
+            ax_top.errorbar(self.x,self.y,xerr=self.dx,yerr=self.dy,fmt=fmt)
+#            ax_top.errorbar(self.x,self.y,xerr=0,yerr=0,fmt=fmt)
+            x_lim=ax_top.get_xlim()
+            ax_top.plot(self.x, y_fit, fmt_m)
+            ax_top.set_xlim(x_lim)
+            ax_top.set_ylabel(self.y_label)
+            ax_top.grid()
+#            ax_top.ticklabel_format(style="sci",scilimits=(0,0))
+
+            ax_bot.errorbar(self.x,y_res,yerr=dy,xerr=self.dx,fmt=fmt)
+#            ax_bot.errorbar(self.x,y_res,yerr=0,xerr=0,fmt=fmt)
+            ax_bot.axhline(0,color=fmt_m[0])
+            ax_bot.set_xlim(x_lim)
+            ax_bot.set_ylabel("Res "+self.y_label)
+            ax_bot.set_xlabel(self.x_label)
+            ax_bot.grid()
+#            ax_bot.ticklabel_format(style="sci",scilimits=(0,0))
+            fig.savefig("data/"+self.name+".pdf",bbox_inches="tight")
+
+        return lam,dlam,C,chi2red,dof
 
     def get_chi2(self,dy_prop=False):
         A,B,dA,dB = self.get_linear_regression_AB()
