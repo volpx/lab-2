@@ -50,6 +50,64 @@ def cov(a,b,ddof=0):
     cov_ab=np.sum((a-ma) * (b-mb))/(len(a)-ddof)
     return cov_ab
 
+def general_regression(F,y,dy=None):
+    """
+        F : coefficients NxM array, the columns are the f(x) or f(y), the rows are the different points
+    """
+    # check input
+    if not isinstance(F,np.ndarray):
+        print('F not correct')
+    if not isinstance(y,np.ndarray):
+        print('b not correct')
+    err_given=True
+    if dy is None:
+        dy=1
+        err_given=False
+    dy = dy * np.ones(y.size)
+
+    # N=number of points
+    N=F.shape[0]
+    # M=number of functions
+    M=F.shape[1]
+
+    # array of... data (?)
+    V=np.empty( (M,) )
+    # correlation smth (?)
+    G=np.empty( (M,M) )
+
+    # calculating correlation matrix
+    for i in range(M):
+        # each element is the sum(f(x,y)*y/dy**2) (?)
+        V[i] = np.sum( F[:,i] * y / (dy**2))
+        for j in range(M):
+            G[i,j] = np.sum( F[:,i] * F[:,j] / (dy**2))
+
+    # C is probably the covariance matrix
+    C = np.linalg.inv(G)
+
+    # get params
+    lam = C @ V
+    # C is square
+    dlam = np.sqrt((np.eye(C.shape[0])*C) @ np.ones(C.shape[0]))
+    # y of the model
+    y_fit = F @ lam
+    # residuals
+    y_res = y - y_fit
+
+    dof = N - lam.size
+
+    # calculate mean of residuals
+    y_res_m = np.sum(y_res) / ( dof )
+    y_res_rms=np.sqrt(np.sum( y_res**2 )/dof)
+
+    # calculate chi2red
+    chi2red=np.sum(y_res ** 2 / dy**2) / dof
+
+    if not err_given:
+        C *= chi2red
+        dlam = np.sqrt((np.eye(C.shape[0])*C) @ np.ones(C.shape[0]))
+
+    return lam,dlam,C,chi2red,dof,y_res_m,y_res_rms
 
 class DataXY:
     def __init__(self,
@@ -183,65 +241,15 @@ class DataXY:
         dB= np.sqrt(np.sum(w)/dw)
         return A,B,dA,dB
 
-    # TODO: place this either as a static method with non-static wrap or directly outside the class
-    def get_general_regression(
+    def get_gen_reg(
             self,
             F,
-            y=None,
-            dy=None,
             plot_save=False,
             fmt="b,",
             fmt_m="r,",
             pp=False):
-        """
-            F : coefficients NxM array, the columns are the f(x) or f(y), the rows are the different points
-        """
-        if y is None:
-            y=self.y
-        if dy is None:
-            dy=self.dy
 
-        dy=dy*np.ones(y.size)
-
-        # N=number of points
-        N=F.shape[0]
-        # M=number of functions
-        M=F.shape[1]
-
-        # array of... data (?)
-        V=np.empty( (M,) )
-        # correlation smth (?)
-        G=np.empty( (M,M) )
-
-        # calculating correlation matrix
-        for i in range(M):
-            # each element is the sum(f(x,y)*y/dy**2) (?)
-            V[i] = np.sum( F[:,i] * y / (dy**2))
-            for j in range(M):
-                G[i,j] = np.sum( F[:,i] * F[:,j] / (dy**2))
-
-        C = np.linalg.inv(G)
-
-        # matrix multiplication product
-        lam = C @ V
-        # C is square
-        dlam = np.sqrt((np.eye(C.shape[0])*C) @ np.ones(C.shape[0]))
-        # y of the model
-        y_fit = F @ lam
-        # residuals
-        y_res = y - y_fit
-
-        dof = y.size - lam.size
-
-        # calculate mean of residuals
-        y_res_m = np.sum(y_res) / ( dof )
-        y_res_rms=np.sqrt(np.sum( y_res**2 )/dof)
-
-        # calculate chi2red
-        chi2red=np.sum(y_res ** 2 / dy**2) / dof
-
-        if False: #dunno what
-            C *= chi2red
+        lam,dlam,C,chi2red,dof,y_res_m,y_res_rms = general_regression(F,self.y,self.dy)
 
         if pp:
             print('Fit results:')
@@ -283,8 +291,6 @@ class DataXY:
             ax_bot.grid()
 #            ax_bot.ticklabel_format(style="sci",scilimits=(0,0))
             fig.savefig("data/"+self.name+".pdf",bbox_inches="tight")
-
-        return lam,dlam,C,chi2red,dof
 
     def get_chi2(self,dy_prop=False):
         A,B,dA,dB = self.get_linear_regression_AB()

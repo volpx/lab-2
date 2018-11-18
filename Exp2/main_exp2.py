@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from uncertainties import ufloat
-from functions import DataXY
+from functions import DataXY,general_regression
 
 fn="sc_{n}cap_r{s}c{t}.csv"
 scope_folder="data/raw_data_from_scope/"
@@ -56,6 +56,11 @@ t_div=np.array(
        [124e-9,980e-9,11.2e-6,3.9e-6,35e-6]])
 
 
+lam=np.empty((2,5,6,3))
+dlam=np.empty((2,5,6,3))
+chi2red=np.empty((2,5,6))
+dof=np.empty((2,5,6))
+
 for ni,n in enumerate(["","no"]):
     pass
     for s in range(1,5+1):
@@ -96,6 +101,7 @@ for ni,n in enumerate(["","no"]):
             dat.dy=dat.dy/dat.y
             dat.y=np.log(np.abs(dat.y))
             F=np.vstack([ np.ones(dat.x.size), dat.x, 1/dat.y]).T
-            print(dat.get_general_regression(F,plot_save=True,pp=True))
-            pass
+            (lam[ni,s-1,t],dlam[ni,s-1,t],_,chi2red[ni,s-1,t],dof[ni,s-1,t],_,_)=general_regression(F,dat.y,dat.dy)
+
+print('Calculated all parameters, now time to plot')
 
