@@ -12,6 +12,18 @@ import matplotlib.pyplot as plt
 from uncertainties import ufloat
 from functions import DataXY,general_regression,bode_plot
 
+r_n=[100e3,10e3,1e3]
+
+def import_data():
+    df1=pd.read_csv('data/LP_r1.csv',header=None).values
+    df2=pd.read_csv('data/LP_r2.csv',header=None).values
+    df3=pd.read_csv('data/LP_r3.csv',header=None).values
+    df4=pd.read_csv('data/HP.csv',header=None).values
+    df=[df1,df2,df3,df4]
+    return df
+
+datasets=import_data()
+
 w=2*np.pi*10**np.linspace(0,10,30)
 s=1j*w
 
