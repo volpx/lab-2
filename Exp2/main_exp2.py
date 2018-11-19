@@ -116,8 +116,10 @@ print('Calculated all parameters')
 # calculate mean of values over trials for each set
 lam_mean=np.mean(lam,axis=2)
 # use std as its uncertanities, it's conservative
-dlam_mean=np.std(lam,axis=2)
+# TODO: check if i have to divide the std
+dlam_mean=np.std(lam,axis=2)/np.sqrt(6)
 
+#made dataset with the tau parameter function of 1/R
 dat_com_cap=DataXY(y=-lam_mean[0,:,1],
               dy=dlam_mean[0,:,1],
               x=1/(50+rs_dmm[:]),
