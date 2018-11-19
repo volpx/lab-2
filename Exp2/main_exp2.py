@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from uncertainties import ufloat
 from functions import DataXY,general_regression
 
+
 fn="sc_{n}cap_r{s}c{t}.csv"
 scope_folder="data/raw_data_from_scope/"
 out_folder="data/"
@@ -61,8 +62,8 @@ dlam=np.empty((2,5,6,3))
 chi2red=np.empty((2,5,6))
 dof=np.empty((2,5,6))
 
+# %%
 for ni,n in enumerate(["","no"]):
-    pass
     for s in range(1,5+1):
         for t in range(0,6):
             print("File:","{n} cap, serie {s}, try {t}".format(n=n,s=s,t=t))
@@ -94,14 +95,43 @@ for ni,n in enumerate(["","no"]):
                     i_min=i_min,
                     i_max=i_max,
                     dx=8e-4*10*t_div[ni,s-1],
-                    dy=8*0.03*v_div[ni,s-1])
+                    dy=0.03*v_div[ni,s-1])
+
             #remove time offset
             dat.x=dat.x-tm_off
             #logging the y axis
-            dat.dy=dat.dy/dat.y
-            dat.y=np.log(np.abs(dat.y))
-            F=np.vstack([ np.ones(dat.x.size), dat.x, 1/dat.y]).T
-            (lam[ni,s-1,t],dlam[ni,s-1,t],_,chi2red[ni,s-1,t],dof[ni,s-1,t],_,_)=general_regression(F,dat.y,dat.dy)
+            dy=dat.dy/dat.y
+            y=np.log(np.abs(dat.y))
+            #create array functions
+            F=np.vstack([ np.ones(dat.x.size), dat.x, 1/y]).T
+            #do the regression
+            (lam[ni,s-1,t],dlam[ni,s-1,t],_,chi2red[ni,s-1,t],dof[ni,s-1,t],_,_)=general_regression(F,y,dy)
+            # TODO: plots?
 
-print('Calculated all parameters, now time to plot')
+
+print('Calculated all parameters')
+
+# %%
+
+# calculate mean of values over trials for each set
+lam_mean=np.mean(lam,axis=2)
+# use std as its uncertanities, it's conservative
+dlam_mean=np.std(lam,axis=2)
+
+dat_com_cap=DataXY(y=-lam_mean[0,:,1],
+              dy=dlam_mean[0,:,1],
+              x=1/(50+rs_dmm[:]),
+              dx=1/rs_dmm[:]**2 * rs_dmm[:]*6e-6,
+              name='With capacitor')
+dat_com_cap.get_fit_plot(err=True)
+
+dat_com_nocap=DataXY(y=-lam_mean[1,:,1],
+              dy=dlam_mean[1,:,1],
+              x=1/(rs_dmm[:]),
+              dx=1/rs_dmm[:]**2 * rs_dmm[:]*6e-6,
+              name='Without capacitor')
+dat_com_nocap.get_fit_plot(err=True)
+
+
+
 

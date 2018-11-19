@@ -342,13 +342,18 @@ class DataXY:
                    fmt_m="r,-",
                    x_lim=None,
                    save=False,
-                   sci=True):
+                   sci=True,
+                   err=True):
         A,B,dA,dB = self.get_linear_regression_AB()
+
+        dx,dy=self.dx,self.dy
+        if not err:
+            dy,dx=0,0
 
         fig,(ax_top,ax_bot) = plt.subplots(2,1, gridspec_kw={'height_ratios':[3,1]})
         fig.suptitle(self.name)
 
-        ax_top.errorbar(self.x,self.y,xerr=self.dx,yerr=self.dy,fmt=fmt)
+        ax_top.errorbar(self.x,self.y,xerr=dx,yerr=dy,fmt=fmt)
         if x_lim is None:
             x_lim=ax_top.get_xlim()
         ax_top.plot(x_lim,\
@@ -362,8 +367,10 @@ class DataXY:
 
         res = self.y - self.get_model()
         dy_propagated = np.sqrt(self.dy**2 + (B*self.dx)**2)
+        if not err:
+            dy_propagated=0
 
-        ax_bot.errorbar(self.x,res,yerr=dy_propagated,xerr=self.dx,fmt=fmt)
+        ax_bot.errorbar(self.x,res,yerr=dy_propagated,xerr=dx,fmt=fmt)
         ax_bot.axhline(0,color=fmt_m[0])
         ax_bot.set_xlim(x_lim)
         ax_bot.set_ylabel("Res "+self.y_label)
@@ -383,7 +390,7 @@ class DataXY:
         print("Chi2Red =",self.get_chi2_red(ddof=ddof,dy_prop=dy_prop))
 
     @staticmethod
-    def compare(datasets,title="Confronto datasets",sci=True,legend=True):
+    def compare(datasets,title="Datasets comparison",sci=True,legend=True):
         fig=plt.figure()
         fig.suptitle(title)
         ax=fig.add_subplot(1,1,1)
@@ -401,7 +408,7 @@ class DataXY:
             fig.savefig("data/"+title+".pdf",bbox_inches="tight")
 
 class DataX:
-    def __init__(self,x,dx=1,name="DataX",x_label="x"):
+    def __init__(self,x,dx=1,name="DataX",x_label="x",color='b'):
         self.x=np.array(x)
         self.dx=dx*np.ones(len(x))
         self.x_label=x_label
