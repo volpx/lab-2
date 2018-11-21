@@ -116,7 +116,7 @@ print('Calculated all parameters')
 # calculate mean of values over trials for each set
 lam_mean=np.mean(lam,axis=2)
 # use std as its uncertanities, it's conservative
-# TODO: check if i have to divide the std
+# TODO: check on lab book if i have to divide the std
 dlam_mean=np.std(lam,axis=2)/np.sqrt(6)
 
 #made dataset with the tau parameter function of 1/R
@@ -126,6 +126,7 @@ dat_com_cap=DataXY(y=-lam_mean[0,:,1],
               dx=1/rs_dmm[:]**2 * rs_dmm[:]*6e-6,
               name='With capacitor')
 dat_com_cap.get_fit_plot(err=True)
+A1=dat_com_cap.get_linear_regression_AB()
 
 dat_com_nocap=DataXY(y=-lam_mean[1,:,1],
               dy=dlam_mean[1,:,1],
@@ -133,6 +134,22 @@ dat_com_nocap=DataXY(y=-lam_mean[1,:,1],
               dx=1/rs_dmm[:]**2 * rs_dmm[:]*6e-6,
               name='Without capacitor')
 dat_com_nocap.get_fit_plot(err=True)
+A2=dat_com_nocap.get_linear_regression_AB()
+
+# %%
+
+# calculate final circuit values
+C_tot=1/A1[1]
+dC_tot=(1/A1[1]**2) * A1[3]
+
+C_osc=1/A2[1]
+dC_osc=(1/A2[1]**2) * A2[3]
+
+R_osc1=1/A1[0]*A1[1]
+dR_osc1=np.sqrt((A1[1]/A1[0]**2)**2 * A1[2] + (1/A1[0])**2 * A1[3])
+
+R_osc2=1/A2[0]*A2[1]
+dR_osc2=np.sqrt((A2[1]/A2[0]**2)**2 * A2[2] + (1/A2[0])**2 * A2[3])
 
 
 
