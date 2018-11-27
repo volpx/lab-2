@@ -95,7 +95,9 @@ for ni,n in enumerate(["","no"]):
                     i_min=i_min,
                     i_max=i_max,
                     dx=8e-4*10*t_div[ni,s-1],
-                    dy=0.03*v_div[ni,s-1])
+                    dy=0.03*v_div[ni,s-1],
+                    x_label='Time [s]',
+                    y_label='Vc [V]')
 
             #remove time offset
             dat.x=dat.x-tm_off

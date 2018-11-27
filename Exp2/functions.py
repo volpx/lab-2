@@ -217,7 +217,7 @@ class DataXY:
 
         return cls(df[x_col][i_min:i_max].values,
                    df[y_col][i_min:i_max].values,
-                   x_label=x_col, y_label=y_col,*args,**kwargs)
+                   *args,**kwargs)
 
 
     def get_linear_regression_AB(self,w=None):
@@ -318,7 +318,7 @@ class DataXY:
                    err=False,
                    out_folder="data/"):
 
-        fig = plt.figure()
+        fig = plt.figure(dpi=3000)
         ax=fig.add_subplot(1,1,1)
         fig.suptitle(self.name)
 
