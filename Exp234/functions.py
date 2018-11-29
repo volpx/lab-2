@@ -24,6 +24,9 @@ def w_mean(data,weigth=None):
 def chi2(data,dy,model):
     return np.sum(((model - data)**2)/(dy**2))
 
+def chi2red(data,dy,model=0,ddof=0):
+    return np.sum(((model - data)**2)/(dy**2)) / (data.size - ddof)
+
 def linear_regression_AB(x,y,w):
     w=w*np.ones(len(x))
     #pdb.set_trace()
@@ -58,7 +61,7 @@ def general_regression(F,y,dy=None):
     if not isinstance(F,np.ndarray):
         print('F not correct')
     if not isinstance(y,np.ndarray):
-        print('b not correct')
+        print('y not correct')
     err_given=True
     if dy is None:
         dy=1
@@ -110,47 +113,168 @@ def general_regression(F,y,dy=None):
     return lam,dlam,C,chi2red,dof,y_res_m,y_res_rms
 
 def bode_plot(x, H, dB=True,
+              xerr=None,Herr=None,err=False,
               x_label='ω [rad * s^-1]',y_label='H',
-              y_lim_mod=None,fmt='b,',title=None):
+              y_lim_mod=None,fmt='b.',title=None,
+              ext_fig=None):
+    """
+        x: (N,) the x coordinates, usually rad/s
+        H: (N,2) matrix with module and phase of H function for each x
+            (N,) vector of complex numbers of H function
+        err: plot with errors switch
+        xerr: (N,) error on x
+        Herr: (2,N) error on H for mod and phase
+        y_lim_mod: (2,) set limits on module plot
+        fmt: format string for the plot
+        ext_fig: external figure that has exactly 2 axes in which the plot will be made,
+                    if passed no labels or title will be changed
+    """
 
     if H.ndim is 2:
         H_mod=H[:,0]
         H_phase=H[:,1]
     elif H.ndim is 1:
-        #each component of H is a complex number
+        #each element of H is a complex number
         H_mod=np.abs(H[:])
         H_phase=np.angle(H[:])
 
-    fig=plt.figure()
-                    #[left,bot,width,height]
-    ax_top=fig.add_axes([0.1, 0.5, 0.8, 0.4], xticklabels=[])
-    ax_bot=fig.add_axes([0.1, 0.1, 0.8, 0.4])
+    if ext_fig is None:
+        fig=plt.figure()
 
-    if title is not None:
-        fig.suptitle()
+        if title is not None:
+            fig.suptitle(title)
 
-    ax_top.set_xscale('log')
-    ax_bot.set_xscale('log')
+                        #[left,bot,width,height]
+        ax_top=fig.add_axes([0.1, 0.5, 0.8, 0.4], xticklabels=[])
+        ax_bot=fig.add_axes([0.1, 0.1, 0.8, 0.4])
+
+        ax_top.set_xscale('log')
+        ax_bot.set_xscale('log')
+
+        y_label='|'+y_label+'|' + ('dB' if dB else '')
+        ax_top.set_ylabel(y_label)
+        ax_bot.set_ylabel('φ [rad]')
+        ax_bot.set_xlabel(x_label)
+
+        ax_bot.grid()
+        ax_top.grid()
+    else:
+        fig=ext_fig
+
+        ax_top,ax_bot=fig.get_axes()
 
     if dB:
+        if err:
+            mod_err=20/np.log(10)*Herr[0]/H_mod
         H_mod=20*np.log10(H_mod)
+    else:
+        if err:
+            mod_err=Herr[0]
 
-    y_label='|'+y_label+'|'+('dB' if dB else '')
-    ax_top.set_ylabel(y_label)
-    ax_bot.set_ylabel('φ [°]')
-    ax_bot.set_xlabel(x_label)
-
-    ax_bot.grid()
-    ax_top.grid()
-
-    ax_top.errorbar(x,H_mod,fmt=fmt)
-    ax_bot.errorbar(x,H_phase,fmt=fmt)
+    if err:
+        ax_top.errorbar(x,H_mod,xerr=xerr,yerr=mod_err,fmt=fmt)
+        ax_bot.errorbar(x,H_phase,xerr=xerr,yerr=Herr[1],fmt=fmt)
+    else:
+        ax_top.plot(x,H_mod,fmt)
+        ax_bot.plot(x,H_phase,fmt)
 
     return fig,(ax_top,ax_bot)
 
-def par(Z1,Z2):
+def fit_plot(x,y,model,
+             yerr=0,xerr=0,
+             title=None,
+             x_label=None,
+             y_label=None,
+             fmt="b.",
+             fmt_m="r,-",
+             x_lim=None,
+             save=False,
+             sci=True):
+
+
+    fig,(ax_top,ax_bot) = plt.subplots(2,1, gridspec_kw={'height_ratios':[3,1]})
+    if title is not None:
+        fig.suptitle(title)
+
+    ax_top.errorbar(x,y,xerr=xerr,yerr=yerr,fmt=fmt)
+    if x_lim is None:
+        x_lim=ax_top.get_xlim()
+    ax_top.plot(x, model, fmt_m)
+    ax_top.set_xlim(x_lim)
+    if y_label is not None:
+        ax_top.set_ylabel(y_label)
+    ax_top.grid()
+    if sci:
+        ax_top.ticklabel_format(style="sci",scilimits=(0,0))
+
+    # res plot
+    res = y - model
+
+    # maybe dy propagated
+
+    ax_bot.errorbar(x,res,yerr=yerr,xerr=xerr,fmt=fmt)
+    ax_bot.axhline(0,color=fmt_m[0])
+    ax_bot.set_xlim(x_lim)
+    if y_label is not None:
+        ax_bot.set_ylabel(y_label+' res')
+    if x_label is not None:
+        ax_bot.set_xlabel(x_label)
+    ax_bot.grid()
+    if sci:
+        ax_bot.ticklabel_format(style="sci",scilimits=(0,0))
+
+    if save:
+        fig.savefig(save,bbox_inches="tight")
+    return fig,(ax_top,ax_bot)
+
+def par(z1,z2):
     # circuit parallel
-    return 1/(1/Z1+1/Z2)
+    return 1/(1/z1+1/z2)
+
+def find_divisions(file):
+    '''
+        for oscilloscope use
+        returns [v_div,t_div] the v_div is of the first channel in the file
+    '''
+    #find deltas
+    with open(file,'r') as f:
+        words=f.read().split()
+        i=0
+
+        # find the v scale
+        while words[i] != 'Scale':
+            i+=1
+        i+=1
+        dv_s=words[i][:-2]
+
+        # find the t scale
+        while words[i] != 'HORIZONTAL':
+            i+=1
+        while words[i] != 'Scale':
+            i+=1
+        i+=1
+        dt_s=words[i][:-2]
+
+        #adjust the measurement unit
+        dv=float(dv_s[:-2])
+        v_mu=dv_s[-2:]
+        if v_mu[0] is 'm':
+            dv*=1e-3
+        elif v_mu[0] is 'u':
+            dv*=1e-6
+        elif v_mu[0] is 'n':
+            dv*=1e-9
+
+        dt=float(dt_s[:-2])
+        t_mu=dt_s[-2:]
+        if t_mu[0] is 'm':
+            dt*=1e-3
+        elif t_mu[0] is 'u':
+            dt*=1e-6
+        elif t_mu[0] is 'n':
+            dt*=1e-9
+
+        return dv,dt
 
 class DataXY:
     def __init__(self,

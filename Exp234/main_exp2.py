@@ -59,8 +59,8 @@ t_div=np.array(
 
 lam=np.empty((2,5,6,3))
 dlam=np.empty((2,5,6,3))
-chi2red=np.empty((2,5,6))
-dof=np.empty((2,5,6))
+chi2red_a=np.empty((2,5,6))
+dof_a=np.empty((2,5,6))
 
 # %%
 for ni,n in enumerate(["","no"]):
@@ -87,8 +87,8 @@ for ni,n in enumerate(["","no"]):
 #            i_max=i
 
 
-            y=df['x-axis'][i_min:i_max].values
-            x=df['2'][i_min:i_max].values
+            y=df['2'][i_min:i_max].values
+            x=df['x-axis'][i_min:i_max].values
             dy=8*0.03*v_div[ni,s-1]
             dx=10*8e-4*t_div[ni,s-1]
 
@@ -100,7 +100,7 @@ for ni,n in enumerate(["","no"]):
             #create array functions
             F=np.vstack([ np.ones(x.size), x, 1/y]).T
             #do the regression
-            (lam[ni,s-1,t],dlam[ni,s-1,t],_,chi2red[ni,s-1,t],dof[ni,s-1,t],_,_)=general_regression(F,y_log,dy_log)
+            (lam[ni,s-1,t],dlam[ni,s-1,t],_,chi2red_a[ni,s-1,t],dof_a[ni,s-1,t],_,_)=general_regression(F=F,y=y_log,dy=dy_log)
             # TODO: plots?
 
 #            dat=DataXY.from_csv_file_special2(
@@ -128,9 +128,10 @@ dlam_mean=np.std(lam,axis=2)/np.sqrt(6)
 #made dataset with the tau parameter as a function of 1/R
 
 # With cap
-x=1/(rs_dmm[:])
-y=-lam_mean[0,:,1]
-dy=dlam_mean[0,:,1]
+x=1/(rs_dmm[0:]+50)
+y=-lam_mean[0,0:,1]
+# the uncertainties on y are too small
+dy=dlam_mean[0,0:,1]
 
 
 A1 = linear_regression_AB(x=x,
@@ -153,7 +154,38 @@ ax_bot.axhline(y=0,color='r')
 ax_bot.set_xlabel('Resistance^-1 [Ohm^-1]')
 ax_bot.set_ylabel('τ^-1 res [s^-1]')
 
+print('Chi2red cap:',chi2red(y,dy,A1[0]+A1[1]*x,ddof=2),'@ dof:',3)
+
 # Without cap
+
+x=1/(rs_dmm[0:]+50)
+y=-lam_mean[1,0:,1]
+# the uncertainties on y are too small
+dy=dlam_mean[1,0:,1]
+
+
+A2 = linear_regression_AB(x=x,
+                          y=y,
+                          w=1/dy**2)
+
+fig, (ax_top, ax_bot) = plt.subplots(2,1, gridspec_kw={'height_ratios':[3,1]})
+fig.suptitle('Comparison without capacitor')
+
+ax_top.errorbar(x=x,y=y,yerr=dy,xerr=0,fmt='b.')
+x_lim=ax_top.get_xlim()
+ax_top.plot(x_lim,
+            A2[0]+A2[1]*np.array(x_lim),
+            'r,-')
+ax_top.set_ylabel('τ^-1 [s^-1]')
+
+y_res=y-A2[0]-A2[1]*x
+ax_bot.errorbar(x=x,y=y_res,yerr=dy,xerr=0,fmt='b.')
+ax_bot.axhline(y=0,color='r')
+ax_bot.set_xlabel('Resistance^-1 [Ohm^-1]')
+ax_bot.set_ylabel('τ^-1 res [s^-1]')
+
+print('Chi2red nocap:',chi2red(y,dy,A1[0]+A1[1]*x,ddof=2),'@ dof:',3)
+
 
 # %%
 
@@ -164,12 +196,19 @@ dC_tot=(1/A1[1]**2) * A1[3]
 C_osc=1/A2[1]
 dC_osc=(1/A2[1]**2) * A2[3]
 
+C=C_tot-C_osc
+dC=np.sqrt(dC_tot**2 + dC_osc**2)
+
 R_osc1=1/A1[0]*A1[1]
 dR_osc1=np.sqrt((A1[1]/A1[0]**2)**2 * A1[2] + (1/A1[0])**2 * A1[3])
 
 R_osc2=1/A2[0]*A2[1]
 dR_osc2=np.sqrt((A2[1]/A2[0]**2)**2 * A2[2] + (1/A2[0])**2 * A2[3])
 
-
+print('C_tot:',ufloat(C_tot,dC_tot))
+print('C_osc:',ufloat(C_osc,dC_osc))
+print('C:',ufloat(C,dC))
+print('R_osc1:',ufloat(R_osc1,dR_osc1))
+print('R_osc2:',ufloat(R_osc2,dR_osc2))
 
 
