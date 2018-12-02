@@ -15,12 +15,12 @@ from functions import *
 data_folder='data3/'
 v_div_in=[.26,.5,.5,.5]
 files=['LP1.csv','LP2.csv','LP3.csv','HP1.csv']
-R_dmm=[9938,997.7,99.56,]
+R_dmm=[9938,997.7,99.56]
 C=32.892e-9
 
 # %%
 
-i=0
+i=3
 # read in data
 df=pd.read_csv(data_folder+files[i]).values
 
@@ -40,18 +40,23 @@ dH_mod=np.sqrt( (1/df[:,3])**2 * dv_out**2 + (df[:,4]/df[:,3]**2)**2 * dv_in**2 
 dH_ph=np.sqrt(2)*dt*w
 
 # plot the experimental data
-fig,(_,_) = bode_plot(x = w,
+fig,(ax1,ax2) = bode_plot(x = w,
                                 H = np.vstack([H_mod,H_ph]).T,
                                 xerr=dw, Herr=[dH_mod,dH_ph],
-                                err=True,dB=True,fmt='b.',title='RC filter')
+                                err=True,dB=True,fmt='b.',title='RC filter, R=99.56 Ω')
 
 # calculate the model
-R=R_dmm[i]
+#R=R_dmm[i]
+R=997.7
+
+ax1.axvline(1/R/C)
+ax2.axvline(1/R/C)
 
 ZC=1/1j/w/C
 ZR=R
 
-H0 = ZC / ( ZR + ZC )
+#H0 = ZC / ( ZR + ZC )
+H0 = ZR / ( ZR + ZC )
 
 # and add to a comp plot
 fig,(_,_) = bode_plot(x = w,
@@ -64,7 +69,7 @@ H_mod_res = H_mod - np.abs(H0)
 H_ph_res  = H_ph  - np.angle(H0)
 
 fig_res_bode = plt.figure()
-fig_res_bode.suptitle('Bode plot residuals')
+fig_res_bode.suptitle('Bode plot residuals, R=99.56 Ω')
 
 ax_top=fig_res_bode.add_axes([0.1, 0.5, 0.8, 0.4], xticklabels=[])
 ax_bot=fig_res_bode.add_axes([0.1, 0.1, 0.8, 0.4])
@@ -91,6 +96,8 @@ ax_bot.axhline(0,color='r')
 
 chi2red_mod=chi2red(H_mod_res,dH_mod)
 chi2red_ph=chi2red(H_ph_res,dH_ph)
+
+fig_res_bode.savefig('data3/bodeplot_res3.pdf',bbox_inches="tight")
 
 print('DATA {i}: R:'.format(i=i),R_dmm[i],'C:',C)
 print('Chi2red_mod:',chi2red_mod,'@ dof:',H_mod.size)

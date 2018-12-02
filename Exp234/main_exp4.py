@@ -24,9 +24,12 @@ dlam=np.empty((5,6,3))
 # discharge
 R_DMM1=np.array([20.16,46.17,98.8,149.4,198.3])
 
-for si in range(5):
+ntau=4
+# for si in range(5):
+for si in range(1):
     s=si+1
-    for ti in range(6):
+    # for ti in range(6):
+    for ti in range(1):
         t=ti+1
 
         file=data_folder+sc_fn.format(s=s,t=t)
@@ -42,10 +45,17 @@ for si in range(5):
             i_min+=1
         i_max=i_min
         #find i_max corresponding a 2tau
-        while y[i_max] > y[i_min]/np.e**2 :
+        while y[i_max] > y[i_min]/np.e**ntau :
             i_max+=1
 
-        # restrict to usable data
+        # first very very rough approximation of tau
+        tau=(x[i_max]-x[i_min])/ntau
+
+        # discard some data from beginning
+        deltat=x[i_max+1]-x[i_max]
+        i_min=i_min+int(0.5*tau/deltat)
+
+        # restrict x,y to usable data
         x=x[i_min:i_max]
         y=y[i_min:i_max]
 
@@ -57,6 +67,7 @@ for si in range(5):
         #log version
         y_log=np.log(y)
         dy_log=dy/y
+
 
 #        fig=plt.figure()
 #        ax=fig.add_subplot(1,1,1)
@@ -75,23 +86,44 @@ for si in range(5):
 lam_mean=np.mean(lam,axis=1)
 dlam_mean=np.std(lam,axis=1) / np.sqrt(6)
 
-x=R_DMM1
-y=-lam_mean[:,1]
+x=par(R_DMM1,1e6)
+y=-lam_mean[:,1] #1/tau
 dy=dlam_mean[:,1]
 
 A = linear_regression_AB(x=x,y=y,w=1/dy**2)
 
-fig_tau,(_,_)=fit_plot(x=x,y=y,model=A[0] + A[1]*x,
+fig_tau1,(_,_)=fit_plot(x=x,y=y,model=A[0] + A[1]*x,
                         yerr=dy,x_label='R [Ohm]',y_label='1/tau [s^-1]')
 
 L=1/A[1]
+dL=1/A[1]**2 * A[3]
 Rl=A[0]/A[1]-50
+#max uncertainty
+dRl= (A[0]/A[1]**2) * A[3] + (1/A[1]) * A[2]
+
+y_res=y-A[0]-A[1]*x
+
+chi2red_taures=chi2red(y_res,dy=dy,ddof=2)
+# %%
+# now i say that i dont trust the uncertainties on data because of the chi2 high
+dy=dy*np.sqrt(chi2red_taures)
+
+B = linear_regression_AB(x=x,y=y,w=1/dy**2)
+
+fig_tau2,(_,_)=fit_plot(x=x,y=y,model=A[0] + A[1]*x,
+                        yerr=dy,x_label='R [Ohm]',y_label='1/tau [s^-1]')
+
+L=1/B[1]
+dL=1/B[1]**2 * B[3]
+Rl=B[0]/B[1]-50
+#max uncertainty
+dRl= (B[0]/B[1]**2) * B[3] + (1/B[1]) * B[2]
 
 # %%
 # filters RCL
 v_div_in=[.5,.5]
 
-i=1
+i=0
 
 file=data_folder+'RCL{i}.csv'.format(i=i+1)
 df=pd.read_csv(file).values
@@ -119,7 +151,7 @@ fig_bode,(_,_) = bode_plot(x=w, H=np.vstack([H_mod,H_ph]).T, #dB=False,
                               Herr=[dH_mod,dH_ph],err=True,title='RCL filter')
 
 # calculate model
-Rl=0.5
+Rl=.5
 #TODO: the values are to be checked throughly
 #R_DMM2=[466,9924.5]
 R_DMM2=[466,9924.5]
@@ -174,6 +206,11 @@ print('Chi2red_mod:',chi2red_mod,'@ dof:',H_mod.size)
 print('Chi2red_ph:',chi2red_ph,'@ dof:',H_mod.size)
 
 
+# %%
+# verify that the RCL filter is like a derivator for f<fc and integrator for f>fc
+
+i=0
+
 
 
 
@@ -194,4 +231,3 @@ print('Chi2red_ph:',chi2red_ph,'@ dof:',H_mod.size)
 #zl=0.5+1j*w*L
 #H=par(zl,zc)/(par(zl,zc)+R_DMM2[1])
 #bode_plot(x=w,H=H,fmt='b.')
-

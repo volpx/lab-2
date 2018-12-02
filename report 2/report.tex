@@ -21,6 +21,7 @@
 \usepackage{float}
 \usepackage{lipsum}
 \usepackage{textcomp}
+\usepackage{circuitikz}
 
 \sisetup{separate-uncertainty=true}
 \linespread{1.3}
@@ -33,7 +34,7 @@
 	\underset{\substack{\uparrow\\\mathrlap{\text{#1}}}}{=}}
 
 
-\title{Misure Resistenza}
+\title{Circuiti RLC}
 \author{Filippo Dal Farra \and Matteo Zandegiacomo Orsolina}
 \date{19 Novembre 2018}
 
@@ -148,12 +149,12 @@ La relazione \ref{eq:cap_dis_real} che rappresenta la scarica del condensatore i
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width = 0.5\textwidth]{capserie1try0.pdf}
-    \caption{Fit lineare della scarica del condensatore}
+    \includegraphics[width = 0.5\textwidth]{fitplot6.pdf}
+    \caption{Esempio di fit della scarica del condensatore, in blu i dati misurati, un punto ogni 400 per questioni di chiarezza, ed in rosso il risultato della regressione lineare.}
     \label{fig:cap_dis_ex_lin}
 \end{figure}
 
-Si pu\'o quindi procedere al fit lineare per il calcolo dei parametri $A$ e $B$ e il rusultato con il confronto tra modello e campioni \'e mostrato in figura \ref{fig:cap_dis_ex_lin}. Come si pu\'o vedere, avvicinandosi a $V_c = 0$ i campioni presi mostrano un drift dal modello: questo \'e molto probabilmente dovuto ad un offset sullo zero dell'oscilloscopio e tale ipotesi viene quindi ora analizzata.
+Si pu\'o quindi procedere al fit lineare per il calcolo dei parametri $A$ e $B$ e il risultato con il confronto tra modello e campioni \'e mostrato in figura \ref{fig:cap_dis_ex_lin}. Come si pu\'o vedere, avvicinandosi a $V_c = 0$ i campioni presi mostrano un drift dal modello: questo \'e molto probabilmente dovuto ad un offset sullo zero dell'oscilloscopio e tale ipotesi viene quindi ora analizzata.
 
 La presenza di un offset $\delta V$, assunto fisso, in fase di misura non ci permette di applicare la regressione lineare del caso precedente: 
 
@@ -175,88 +176,248 @@ La presenza di un offset $\delta V$, assunto fisso, in fase di misura non ci per
 	\label{eq:gen_reg}
 \end{gather}  
 
-Si procede quindi ad applicare la regressione generalizzata \ref{eq:gen_reg} ed i risultati per ogni serie di dati presa in considerazione sono rappresentati nelle tabelle \ref{eq:gen_reg}.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Si procede quindi ad applicare la regressione generalizzata \ref{eq:gen_reg}. Dato che per ogni valore di resistenza sono state registrate 6 scariche del condensatore si estraggono poi i tre  parametri come funzione della sola resistenza applicata effettuando la media campionaria sui 6 valori ottenuti ed i risultati sono esposti in tabella \ref{tab:ABC1}.
 
 
 
 \begin{figure}[h]
 \begin{center}
-    \large{Amperometro a monte}
+	\large{Con condensatore}
+	
+	\begin{tabular}{c|c c c} 
+	$R$ [\si{\ohm}] & $A$ [log(\si{\volt})] & $B$ [\si{\per\second}] & $C$ [\si{\volt}] \\
+	[0.5ex]
+	\hline
+	$ 998.2 $&$ 2.07683\pm 0.00011 $&$ -28986\pm 6 $&$ -0.09284\pm 0.00024 $\\
+	$ 9917.0 $&$ 2.07150\pm 0.00009 $&$ -3068.8\pm 0.6 $&$ -0.09144\pm 0.00012 $\\
+	$ 99660.0 $&$ 1.9875\pm 0.0005 $&$ -336.58\pm 0.20 $&$ -0.0640\pm 0.0006 $\\
+	$ 29820.0 $&$ 2.04916\pm 0.00010 $&$ -1044.13\pm 0.24 $&$ -0.08552\pm 0.00019 $\\
+	$ 373200.0 $&$ 1.7690\pm 0.0004 $&$ -114.31\pm 0.09 $&$ -0.0307\pm 0.0005 $\\
+	
+	\end{tabular}
+	
+	
+	\vspace{0.5cm}
+	
+	\large{Senza condensatore}
+		
+	\begin{tabular}{c|c c c} 
+	$R$ [\si{\ohm}] & $A$ [log(\si{\volt})] & $B$ [\si{\per\second}] & $C$ [\si{\volt}] \\
+	[0.5ex]
+	\hline
+	$ 998.2 $&$ 2.1503\pm 0.0012 $&$ (-6.840\pm 0.012)\E{6} $&$ -0.1958\pm 0.0022 $\\
+	$ 9917 $&$ 2.0561\pm 0.0009 $&$ (-7.5257\pm 0.0031)\E{5} $&$ -0.0733\pm 0.0007 $\\
+	$ 99660 $&$ 1.95850\pm 0.00021 $&$ -80567\pm 18 $&$ -0.08907\pm 0.00016 $\\
+	$ 29820 $&$ 2.0384\pm 0.0006 $&$ (-2.5736\pm 0.0007)\E{5} $&$ -0.0877\pm 0.0005 $\\
+	$ 373200 $&$ 1.73688\pm 0.00023 $&$ -27803\pm 28 $&$ -0.03462\pm 0.00016 $\\
+	
+	\end{tabular}
 \end{center}
-\begin{multicols}{2}
-\begin{center}
-\begin{tabular}{c|c} 
-$V_{FS}=\SI{10}{\volt}$&$i_{FS}=\SI{5}{\milli\ampere}$\\
-$V_i \pm \sigma [V]$ [\si{\volt}] & $i_i \pm \sigma [i]$ [\si{\milli\ampere}]\\
-[0.5ex]
-\hline
-$9.6 \pm 0.2 $&$2.2 \pm 0.1$\\
-
-$7.8 \pm 0.2 $&$1.7 \pm 0.1$\\
-
-$8.6 \pm 0.2 $&$1.9 \pm 0.1$\\
-
-$8.6 \pm 0.2 $&$1.8 \pm 0.1$\\
-
-$7.2 \pm 0.2 $&$1.5 \pm 0.1$\\
-
-$7.2 \pm 0.2 $&$1.6 \pm 0.1$\\
-
-$5.6 \pm 0.2 $&$1.2 \pm 0.1$\\
-
-$6.0 \pm 0.2 $&$1.3 \pm 0.1$\\
-
-$8.0 \pm 0.2 $&$1.7 \pm 0.1$\\
-
-$8.8 \pm 0.2 $&$1.9 \pm 0.1$\\
-
-\end{tabular}
-\end{center}
-
-\begin{center}
-\begin{tabular}{c|c} 
-$V_{FS}=\SI{2}{\volt}$&$i_{FS}=\SI{500}{\micro\ampere}$\\
-$V_i \pm \sigma [V]$        [\si{\volt}] & $i_i \pm \sigma [i]$         [\si{\milli\ampere}]\\
-[0.5ex]
-\hline
-$1.80 \pm 0.04 $& $0.43 \pm 0.01$\\
-$1.36 \pm 0.04 $&$0.33 \pm 0.01$\\
-
-$1.40 \pm 0.04 $&$0.34 \pm 0.01$\\
-
-$1.64 \pm 0.04 $&$0.39 \pm 0.01$\\
-
-$1.52 \pm 0.04 $&$0.37 \pm 0.01$\\
-
-$1.56 \pm 0.04 $&$0.38 \pm 0.01$\\
-
-$1.20 \pm 0.04 $&$0.29 \pm 0.01$\\
-
-$1.92 \pm 0.04 $&$0.46 \pm 0.01$\\
-
-$1.76 \pm 0.04 $&$0.43 \pm 0.01$\\
-
-$1.68 \pm 0.04 $&$0.40 \pm 0.01$\\
-
-\end{tabular}
-\end{center} 
-\end{multicols}
+\label{tab:ABC1}
 \end{figure}
+
+Per estrarre il valore della capacit\'a in esame si procede all'analisi del parametro $B$ nei due casi che risulta avere la seguente relazione, in cui $R_s = 50\ \si{\ohm}$ \'e l'impedenza in uscita dal generatore di funzioni in serie con la resistenza $R$. \\
+
+\begin{equation}
+	-B=\frac{1}{\tau}=\frac{1}{C} \left( \frac{1}{R+R_s} + \frac{1}{R_{osc}} \right) = \gamma + \lambda \frac{1}{R+R_s}
+\end{equation}
+
+Si effettua un plot \ref{fig:fit1} per mostrare la relazione tra $1/\tau$ in funzione della conduttanza $1/Rtot$ applicata nei casi con e senza condensatore incognito assieme alla corrispondente regressione lineare con i parametri $\gamma$ e $\lambda$ poi tabulati.
+
+\begin{figure}[h]
+	\centering
+	 \begin{minipage}{0.5\textwidth}
+	     \centering
+	     \includegraphics[width=\textwidth]{figfit.pdf}
+	     %\caption{first figure}
+	 \end{minipage}\hfill
+	 \begin{minipage}{0.5\textwidth}
+	     \centering
+	     \includegraphics[width=\textwidth]{figfit1.pdf} 
+	     %\caption{second figure}
+	 \end{minipage}
+	 \label{fig:fit1}
+\end{figure}
+
+\begin{center}
+\begin{tabular}{c | c c} 
+& Con condensatore  & Senza condensatore \\
+[0.5ex]
+\hline
+$C_{tot}=1/\lambda$ &$ (3.3026\pm 0.0004)\E{-8} $&$ (1.34727\pm 0.00034)\E{-10} $\\
+$R_{osc}=\lambda/\gamma$ &$ (9.22\pm 0.08)\E{5} $&$ (1.0946\pm 0.0008)\E{6} $\\
+$\chi^2_{r,\mathrm{3 dof}}$& $85.15$ & $13.78\E{6}$ \\
+
+\end{tabular}
+\end{center}
+
+Come \'e evidente, il valore del $\chi^2$ ottenuto mostra un'incompatibilit\'a con tra le misure ottenute e il modello teorico. Questo potrebbe essere spiegato dal fatto che ci siano degli effetti che non sono stati presi in considerazione. Scegliamo quindi di considerare veritiera la legge teorica e conseguentemente scalare le incertezze di conseguenza, le quali erano quindi state sottostimate, in modo da imporre $\chi^2_r=1$.\\
+
+\begin{center}
+\begin{tabular}{c | c c} 
+& Con condensatore  & Senza condensatore \\
+[0.5ex]
+\hline
+$C_{tot}=1/\lambda$ &$ (3.303\pm 0.004)\E{8} $&$ (1.3\pm 1.3)\E{-10} $\\
+$R_{osc}=\lambda/\gamma$ &$ (9.22\pm 0.25)\E{5} $&$ (1.09\pm 0.05)\E{6} $\\
+\end{tabular}
+\end{center}
+
+Otteniamo quindi i parametri del circuito in esame, considerando nel caso delle due $R_{osc}$ la media dei due valori con incertezza corrispondente alla loro deviazione standard: \\
+
+\begin{gather}
+	\nonumber
+	C=(3.289\pm 0.013)\E{8}\\
+	\nonumber
+	C_{osc}=(1.3\pm 1.3)\E{-10} \\
+	\nonumber
+	R_{osc}=(1.01\pm 0.08)\E{6} \\
+\end{gather}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%% FILTRI RC %%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Filtri RC}
+
+Si analizza ora la risposta in frequenza del circuito \ref{fig:RC_LP1} e del circuito \ref{fig:RC_HP1}.
+
+\begin{figure}[h]
+\begin{center}
+    \begin{circuitikz} []
+    \draw
+        (0,0) node[ground] {} to [sV] (0,2) to [R, l=$R_s$] (2,2)
+        (4,0) node[ground]  {}  to [C, l=$C$] (4,2)
+        (6,0) node[ground]  {} to [C, l=$C_{osc}$] (6,2)
+        (8,0) node[ground]  {} to [R, l=$R_{osc}$] (8,2)
+        (2,2) to [R, l=$R$] (4,2) to (9,2) node[right]{$V_{out}$}
+        (2,2) to (2,3) to (9,3) node[right]{$V_{in}$}
+        (9,2) to [open, *-*] (9,3);
+    \end{circuitikz}
+\end{center}
+\label{fig:RC_LP1}
+\caption{Curcuito RC Low Pass}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+    \begin{circuitikz} []
+    \draw
+        (0,0) node[ground] {} to [sV] (0,2) to [R, l=$R_s$] (2,2)
+        (4,0) node[ground] {} to [R, l=$R$] (4,2)
+        (6,0) node[ground] {} to [C, l=$C_{osc}$] (6,2)
+        (8,0) node[ground] {} to [R, l=$R_{osc}$] (8,2)
+        (2,2) to [C, l=$C$] (4,2) to (9,2) node[right]{$V_{out}$}
+        (2,2) to (2,3) to (9,3) node[right]{$V_{in}$}
+        (9,2) to [open, *-*] (9,3);
+    \end{circuitikz}
+\end{center}
+\label{fig:RC_LP1}
+\caption{Curcuito RC High Pass}
+\end{figure}
+
+Le funzioni di trasferimento senza il contributo di $C_{osc}$ e $R_{osc}$, in prima analisi trascurabili, risultano essere:
+
+\begin{gather}
+	H(\omega) = \frac{V_{out}}{V_{in}} = \frac{1}{1+j \omega \tau} \quad \tau=RC \\
+	H(\omega)  = \frac{j \omega \tau}{1+j \omega \tau} \quad \tau=RC
+\end{gather}
+
+Dove $C=(3.289\pm 0.013)\E{8}$ \'e il condensatore utilizzato nell'analisi precedente.
+
+Vengono quindi graficati modulo e fase dei dati misurati a confronto con la risposta teorica per i tre valori di frequenza di taglio scelti:
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{bodeplot1.pdf} 
+        %\caption{first figure}
+    \end{minipage}\hfill
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{bodeplot2.pdf} 
+        %\caption{second figure}
+    \end{minipage}
+    \\
+    \centering
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{bodeplot3.pdf} 
+        %\caption{first figure}
+    \end{minipage}\hfill
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{bodeplot4.pdf} 
+        %\caption{second figure}
+    \end{minipage}
+    \caption{Grafici dei tre filtri Low Pass e del filtro High Pass accostati alle loro previsioni teoriche, la linea verticale azzurra mostra la posizione della frequenza di taglio teorica}
+    \label{fig:RC_fil}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{bodeplot_res1.pdf} 
+        %\caption{first figure}
+    \end{minipage}\hfill
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{bodeplot_res2.pdf} 
+        %\caption{second figure}
+    \end{minipage}
+    \\
+    \centering
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{bodeplot_res3.pdf} 
+        %\caption{first figure}
+    \end{minipage}\hfill
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{bodeplot_res4.pdf} 
+        %\caption{second figure}
+    \end{minipage}
+    \caption{Residui dei grafici di Bode dei filtri passa basso e passa alto}
+    \label{fig:RC_fil_res}
+\end{figure}
+
+Come si vede dai grafici \ref{fig:RC_fil} e \ref{fig:RC_fil_res} il modello teorico mostra una notevole compatibilit\'a con i dati raccolti a meno di effetti di ordine superiore che causano deviazioni comunque minime dovute probabilmente al non aver considerato le capacit\'a parassite $R_{osc}$ e $C_{osc}$ per il calcolo della funzione di trasferimento. Un'eccezzione si vede sul grafico corrispondente a $R=99.56 \si{\ohm}$ il quale per frequenze maggiori di $\omega = 3\ \si{\mega\radian\per\second}$ mostra una deviazione molto pi\'u marcata ma comunque spiegabile dalla presenza di componenti parassiti nel circuito che agiscono solamente a frequenze cos\'i alte.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{figure}
+%\renewcommand{\arraystretch}{9}
+\begin{center}
+    \begin{circuitikz} [american voltages]
+    \draw
+        (0,0) node[ground] {} to [sqV] (0,2) to [R, l=$R_s$] (2,2)
+        (4,0) node[ground] {} to [L, l=$L$] (4,2)
+        (6,0) node[ground] {} to [C, l=$C$] (6,2)
+        (8,0) node[ground] {} to [C, l=$C_{osc}$] (8,2)
+        (10,0) node[ground] {} to [R, l=$R_{osc}$] (10,2)
+        (2,2) to [R, l=$R$] (4,2) to (11,2) node[right]{$V_{out}$}
+        (2,2) to (2,3) to (11,3) node[right]{$V_{in}$}
+        (11,2) to [open, *-*] (11,3);
+    \end{circuitikz}
+\end{center}
+\end{figure}
+
+
+
+
+
 
 \newpage
 

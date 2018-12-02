@@ -63,9 +63,12 @@ chi2red_a=np.empty((2,5,6))
 dof_a=np.empty((2,5,6))
 
 # %%
-for ni,n in enumerate(["","no"]):
-    for s in range(1,5+1):
-        for t in range(0,6):
+#for ni,n in enumerate(["","no"]):
+for ni,n in enumerate([""]):
+    #for s in range(1,5+1):
+    for s in range(1,2):
+        #for t in range(0,6):
+        for t in range(0,1):
             print("File:","{n} cap, serie {s}, try {t}".format(n=n,s=s,t=t))
 
             df=pd.read_csv(scope_folder+fn.format(n=n,s=s,t=t),header=0,skiprows=[1])
@@ -103,6 +106,14 @@ for ni,n in enumerate(["","no"]):
             (lam[ni,s-1,t],dlam[ni,s-1,t],_,chi2red_a[ni,s-1,t],dof_a[ni,s-1,t],_,_)=general_regression(F=F,y=y_log,dy=dy_log)
             # TODO: plots?
 
+            plt.errorbar(y=y_log[::400],x=x[::400],yerr=dy_log[::400],xerr=0,fmt='b.')
+            plt.plot(x[::100],(F@lam[ni,s-1,t])[::100],'r,-')
+            plt.grid()
+            plt.ylabel('log(Vc) [log(V)]')
+            plt.xlabel('Time [s]')
+            plt.suptitle('Cap, serie 1, try 0')
+            plt.savefig('data2/fitplot4.pdf',bbox_inches="tight")
+
 #            dat=DataXY.from_csv_file_special2(
 #                    scope_folder+fn.format(n=n,s=s,t=t),
 #                    name="{n} cap, serie {s}, try {t}".format(n=n,s=s,t=t),
@@ -123,7 +134,7 @@ print('Calculated all parameters')
 # calculate mean of values over trials for each set
 lam_mean=np.mean(lam,axis=2)
 # use std as its uncertanities because the data are correlated
-dlam_mean=np.std(lam,axis=2)/np.sqrt(6)
+dlam_mean=np.std(lam,axis=2)   /np.sqrt(6)
 
 #made dataset with the tau parameter as a function of 1/R
 
@@ -131,12 +142,13 @@ dlam_mean=np.std(lam,axis=2)/np.sqrt(6)
 x=1/(rs_dmm[0:]+50)
 y=-lam_mean[0,0:,1]
 # the uncertainties on y are too small
-dy=dlam_mean[0,0:,1]
+dy=dlam_mean[0,0:,1]*np.sqrt(85.1568378226233)
 
 
 A1 = linear_regression_AB(x=x,
                           y=y,
                           w=1/dy**2)
+m=A1[0]+A1[1]*x
 
 fig, (ax_top, ax_bot) = plt.subplots(2,1, gridspec_kw={'height_ratios':[3,1]})
 fig.suptitle('Comparison with capacitor')
@@ -154,19 +166,26 @@ ax_bot.axhline(y=0,color='r')
 ax_bot.set_xlabel('Resistance^-1 [Ohm^-1]')
 ax_bot.set_ylabel('τ^-1 res [s^-1]')
 
+#other plot
+fit_plot(x,y,m,yerr=dy,title='Con condensatore',
+         x_label='Rtot^-1 [Ω^-1]',
+         y_label='τ^-1 [s^-1]',
+         save='data2/figfit.pdf')
+
 print('Chi2red cap:',chi2red(y,dy,A1[0]+A1[1]*x,ddof=2),'@ dof:',3)
 
 # Without cap
 
-x=1/(rs_dmm[0:]+50)
-y=-lam_mean[1,0:,1]
+x=1/(rs_dmm[:]+50)
+y=-lam_mean[1,:,1]
 # the uncertainties on y are too small
-dy=dlam_mean[1,0:,1]
+dy=dlam_mean[1,:,1] *np.sqrt(13789545.320792437)
 
 
 A2 = linear_regression_AB(x=x,
                           y=y,
                           w=1/dy**2)
+m=A2[0]+A2[1]*x
 
 fig, (ax_top, ax_bot) = plt.subplots(2,1, gridspec_kw={'height_ratios':[3,1]})
 fig.suptitle('Comparison without capacitor')
@@ -185,6 +204,12 @@ ax_bot.set_xlabel('Resistance^-1 [Ohm^-1]')
 ax_bot.set_ylabel('τ^-1 res [s^-1]')
 
 print('Chi2red nocap:',chi2red(y,dy,A1[0]+A1[1]*x,ddof=2),'@ dof:',3)
+
+#other plot
+fit_plot(x,y,m,yerr=dy,title='Senza condensatore',
+         x_label='Rtot^-1 [Ω^-1]',
+         y_label='τ^-1 [s^-1]',
+         save='data2/figfit1.pdf')
 
 
 # %%
