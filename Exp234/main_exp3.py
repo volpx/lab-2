@@ -69,7 +69,7 @@ H_mod_res = H_mod - np.abs(H0)
 H_ph_res  = H_ph  - np.angle(H0)
 
 fig_res_bode = plt.figure()
-fig_res_bode.suptitle('Bode plot residuals, R=99.56 Ω')
+fig_res_bode.suptitle('Bode plot residuals, R=997.7 Ω')
 
 ax_top=fig_res_bode.add_axes([0.1, 0.5, 0.8, 0.4], xticklabels=[])
 ax_bot=fig_res_bode.add_axes([0.1, 0.1, 0.8, 0.4])
@@ -97,7 +97,7 @@ ax_bot.axhline(0,color='r')
 chi2red_mod=chi2red(H_mod_res,dH_mod)
 chi2red_ph=chi2red(H_ph_res,dH_ph)
 
-fig_res_bode.savefig('data3/bodeplot_res3.pdf',bbox_inches="tight")
+fig_res_bode.savefig('data3/bodeplot_res4.pdf',bbox_inches="tight")
 
 print('DATA {i}: R:'.format(i=i),R_dmm[i],'C:',C)
 print('Chi2red_mod:',chi2red_mod,'@ dof:',H_mod.size)
