@@ -49,9 +49,11 @@
 
 Questa relazione riassume gli esiti di tre esperienze tutte finalizzate all'adempimento dell'analisi di un circuito RLC svolto durante l'ultima seduta. Per fare ci\'o si \'e sfruttato l'uso di un oscilloscopio il quale, da come si vedr\'a, modifica inevitabilmente le risposte dei circuiti in analisi. A causa di questo è risultato poi necessario derivare i valori delle capacità e delle resistenze parassite che si trovano all'interno dell'oscilloscopio per poi effettuare l'analisi tenendo conto di esse. \\
 
-Successivamente abbiamo studiato la risposta in frequenza del circuito RC nelle diverse configurazioni di filtro passa alto e filtro passa basso, sempre variando le frequenze di taglio. Così facendo si \'e riusciti ad ottenere i diagrammi di Bode corrispondenti che associati alle funzioni di trasferimento teoriche associate forniscono i valori dei componenti usati nei vari casi. Inoltre queste misure sono poi state messe a confronto con i risultati ottenuti precedentemente nella carica e scarica del condensatore, per osservare se queste misure erano tra loro compatibili. \\
+Successivamente abbiamo studiato la risposta in frequenza del circuito RC nelle diverse configurazioni di filtro passa alto e filtro passa basso, sempre variando le frequenze di taglio. Così facendo si \'e riusciti ad ottenere i diagrammi di Bode corrispondenti che associati alle relative funzioni di trasferimento teoriche forniscono i valori dei componenti usati nei vari casi. Inoltre queste misure sono poi state messe a confronto con i risultati ottenuti precedentemente nella carica e scarica del condensatore, per osservare se risultavano tra loro compatibili. \\
 
-Infine abbiamo considerato anche un induttore, consistente in una bobina realizzata precedentemente. Inizialmente abbiamo studiato un circuito RL per trovate il valore dell'induttanza di questo elemento attraverso diversi cicli di carica e scarica del campo magnetico da esso generato. In seguito è stata posta all'interno di un circuito RLC composto dalla bobina e dal condensatore usato precedentemente di cui si sapeva a questo punto il valore. Ciò ci ha permesso di studiare il funzionamento del circuito passa banda e la propria frequenza di risonanza.
+Infine abbiamo considerato anche un induttore, consistente in una bobina realizzata precedentemente. Inizialmente abbiamo studiato un circuito RL per trovate il valore dell'induttanza di questo elemento attraverso diversi cicli di carica e scarica del campo magnetico da esso generato. In seguito è stata posta all'interno di un circuito RLC composto dalla bobina e dal condensatore usato precedentemente di cui si sapeva a questo punto il valore. Ciò ci ha permesso di studiare il funzionamento del circuito passa banda e trovare la sua frequenza di risonanza. \\
+
+Il codice utilizzato in questa esperienza \'e raggiungibile al \href{https://gitlab.com/volpx/lab-2/tree/master/Exp234}{<link>}.
 
 \newpage
 
@@ -73,14 +75,12 @@ Infine abbiamo considerato anche un induttore, consistente in una bobina realizz
 
 \section{Procedure di misura}
 
-Innanzitutto è stato necessario montare il circuito RC per osservare la scarica del condensatore come suggerito dalla scheda fornita \ref{fig:RC_LP}. Ad esso andava poi collegato l'oscilloscopio tramite i cavi coassiali all'ingresso ed all'uscita del circuito. Abbiamo noi impostato il generatore di funzioni in modo che  producesse lo scalino da $\Delta V$ a $0\ V$ , e in questa configurazione \'e stato osservato l'andamento in uscita dell'onda nella fase di scarica. Sono stati utilizzati 5 diversi valori di resistenza con lo stesso condensatore in modo da avere tempi caratteristici $\tau$ differenti e per ognuno sono state salvate 6 forme d'onda con l'oscilloscopio impostato a 16 averagings. Ciò ha fornito un numero sufficiente di dati per poi poter trovare i parametri relativi ad eventuali componenti parassiti dato che la procedura \'e stata ripetuta senza il condensatore in esame supplito dalla capacit\'a intrinseca in cavi e ADC dell'oscilloscopio. Tutti i valori di resistenza utilizzati sono stati misurati con il DMM. \\
+Innanzitutto è stato necessario montare il circuito RC per osservare la scarica del condensatore come suggerito dalla scheda fornita \ref{fig:RC_LP}. Ad esso andava poi collegato l'oscilloscopio tramite i cavi coassiali all'ingresso ed all'uscita del circuito. Abbiamo impostato il generatore di funzioni in modo che  producesse lo scalino da $\Delta V$ a $0\ V$ , e in questa configurazione \'e stato osservato l'andamento in uscita dell'onda nella fase di scarica. Sono stati utilizzati 5 diversi valori di resistenza con lo stesso condensatore in modo da avere tempi caratteristici $\tau$ differenti e per ognuno sono state salvate 6 forme d'onda con l'oscilloscopio impostato a 16 averagings. Ciò ha fornito un numero sufficiente di dati per poi poter trovare i parametri relativi ad eventuali componenti parassiti, dato che in seguito la procedura \'e stata ripetuta senza il condensatore in esame, supplito dalla capacit\'a intrinseca di cavi e ADC dell'oscilloscopio. Tutti i valori di resistenza utilizzati sono stati misurati con il DMM. \\
 
-Successivamente lo stesso circuito \'e stato da noi studiato come filtro, analizzando la sua risposta ad un ingresso sinusoidale in funzione della frequenza applicata. Sono stati da noi scelti valori di resistenza che ci dessero valori della frequenza di taglio specifici, il generatore di funzioni \'e stato impostato da noi a $V_{PP} = 2 \ V$ %TODO:check vpp
-con frequenze distribuite esponenzialmente per una decade e \textonehalf \ prima e dopo la frequenza di taglio. Quindi sono stati da noi trascritti i valori di ampiezza in entrata ed uscita dal circuito assieme allo sfasamento tra i due forniti dall'oscilloscopio tramite le sue funzioni di misura in modo da poter creare il diagramma di Bode. Infine abbiamo noi applicato una resistenza in modo da caricare il circuito ed in queste condizioni \'e stata misurata l'impedenza in uscita del filtro con due diverse frequenze. La procedura è stato ripetuta con la configurazione passa alto \ref{fig:RC_HP}, per un unico valore di resistenza. \\
+Successivamente lo stesso circuito \'e stato studiato come filtro, analizzando la sua risposta ad un ingresso sinusoidale in funzione della frequenza applicata. Sono stati scelti valori di resistenza che ci dessero valori della frequenza di taglio specifici. Il generatore di funzioni \'e stato impostato a $V_{PP} = 2\div 4 V$ con frequenze distribuite esponenzialmente per una decade e \textonehalf \ prima e dopo la frequenza di taglio. Quindi sono stati da noi trascritti i valori di ampiezza in entrata ed uscita dal circuito assieme allo sfasamento tra i due forniti dall'oscilloscopio tramite le sue funzioni di misura in modo da poter creare il diagramma di Bode. Infine abbiamo applicato una resistenza in modo da caricare il circuito ed in queste condizioni \'e stata misurata l'impedenza in uscita del filtro con due diverse frequenze. La procedura è stato ripetuta con la configurazione passa alto \ref{fig:RC_HP1}, per un unico valore di resistenza. \\
 
 
-% TODO: devo ancora leggere
-In seguito si è considerata una bobina costruita precedentemente e con essa è stato costruito un circuito RL. Per fare ciò la bobina è stata inserita all'interno di una struttura fatta da un materiale ferromagnetico, il quale aveva come ruolo quello di ampliare l'induttanza da esso prodotta. Si è innanzitutto ancora usata un'onda quadra dal generatore di funzioni, con diverse configurazioni di resistenze. Se ne è così studiata la carica e la scarica di questo elemento. Si è poi montato un circuito RLC passa banda, sfruttando come induttore ancora la bobina e come condensatore l'elemento di circuito usato precedentemente. Si è impostato il generatore di funzioni in modo da realizzare un'onda sinusoidale applicata a due diverse configurazioni di valori di resistenza. Si è studiato ciò modificando i valori della frequenza, e la maggior parte di essi sono stati presi in concomitanza della frequenza di risonanza del circuito.
+In seguito si è considerata una bobina costruita precedentemente e con essa è stato costruito un circuito RL. Per fare ciò la bobina è stata inserita all'interno di un core di materiale ferromagnetico, il quale aveva il ruolo di amplificare l'induttanza da esso prodotta. Si è innanzitutto ancora usata un'onda quadra dal generatore di funzioni, con diverse configurazioni di resistenze in modo da studiarne la scarica. Si è poi montato un circuito RLC passa banda, sfruttando come induttore ancora la bobina e come condensatore l'elemento di circuito usato precedentemente. Si è impostato il generatore di funzioni in modo da realizzare un'onda sinusoidale applicata a due diverse configurazioni di valori di resistenza. Si è studiato ciò modificando i valori della frequenza, infittendo la risoluzione in concomitanza della frequenza di risonanza del circuito. \\
 
 \newpage
 
@@ -95,13 +95,24 @@ Verranno ora analizzati i dati ottenuti per ogni configurazione.
 Il circuito ora preso in considerazione \'e il seguente:
 
 \begin{figure}[h]
-    \centering
-    \includegraphics[width = \textwidth]{RC_LP.png}
+\begin{center}
+    \begin{circuitikz} []
+    \draw
+        node[ground] (0,0) {} to [sqV] (0,2) to [R, l=$R_s$] (2,2)
+        (4,0) node[ground] {} to [C, l=$C$] (4,2)
+        (6,0) node[ground] {} to [C, l=$C_{osc}$] (6,2)
+        (8,0) node[ground] {} to [R, l=$R_{osc}$] (8,2)
+        (2,2) to [R, l=$R$] (4,2) to (9,2)  node[right]{$V_{out}$} 
+        (2,2) to (2,3) to (9,3) node[right]{$V_{in}$}
+        (9,2) to [open, *-*] (9,3);
+    \end{circuitikz}
     \caption{Circuito RC passa basso utilizzato anche per l'analisi della scarica del condensatore}
     \label{fig:RC_LP}
+\end{center}
 \end{figure}
 
-Utilizzando la legge di Kirchhoff per le tensioni e presa la maglia passante per la resistenza $R$ e condensatore $C$ e considerando la relazione tra corrente e tensione ai capi di esso \ref{eq:cap_law} si ottiene l'equazione differenziale \ref{eq:cap_equ} che rappresenta una semplificazione di quello che accade nel nostro circuito nell'approssimazione $C_{osc}=0$ e $R_{osc} = \infty $.
+
+Utilizzando la legge di Kirchhoff per le tensioni e presa la maglia passante per resistenza $R$ e condensatore $C$ e considerando la relazione tra corrente e tensione ai capi di esso \ref{eq:cap_law} si ottiene l'equazione differenziale \ref{eq:cap_equ} che rappresenta una semplificazione di quello che accade nel nostro circuito nell'approssimazione $C_{osc}=0$ e $R_{osc} = \infty $.
 
 \begin{gather}
     i(t) = C \frac{\de V_c (t)}{\de t}
@@ -222,8 +233,8 @@ Per estrarre il valore della capacit\'a in esame si procede all'analisi del para
 \begin{equation}
 	-B=\frac{1}{\tau}=\frac{1}{C} \left( \frac{1}{R+R_s} + \frac{1}{R_{osc}} \right) = \gamma + \lambda \frac{1}{R+R_s}
 \end{equation}
-
-Si effettua un plot \ref{fig:fit1} per mostrare la relazione tra $1/\tau$ in funzione della conduttanza $1/Rtot$ applicata nei casi con e senza condensatore incognito assieme alla corrispondente regressione lineare con i parametri $\gamma$ e $\lambda$ poi tabulati.
+\\
+Si effettua un plot \ref{fig:fit1} per mostrare la relazione tra $1/\tau$ in funzione della conduttanza $1/R_{tot}$ applicata nei casi con e senza condensatore incognito assieme alla corrispondente regressione lineare con i parametri $\gamma$ e $\lambda$.
 
 \begin{figure}[h]
 	\centering
@@ -237,6 +248,7 @@ Si effettua un plot \ref{fig:fit1} per mostrare la relazione tra $1/\tau$ in fun
 	     \includegraphics[width=\textwidth]{figfit1.pdf} 
 	     %\caption{second figure}
 	 \end{minipage}
+	 \caption{plot che lega 1/$\tau$ a 1/R}
 	 \label{fig:fit1}
 \end{figure}
 
@@ -294,8 +306,8 @@ Si analizza ora la risposta in frequenza del circuito \ref{fig:RC_LP1} e del cir
         (9,2) to [open, *-*] (9,3);
     \end{circuitikz}
 \end{center}
-\label{fig:RC_LP1}
 \caption{Curcuito RC Low Pass}
+\label{fig:RC_LP1}
 \end{figure}
 
 \begin{figure}[h]
@@ -311,8 +323,8 @@ Si analizza ora la risposta in frequenza del circuito \ref{fig:RC_LP1} e del cir
         (9,2) to [open, *-*] (9,3);
     \end{circuitikz}
 \end{center}
-\label{fig:RC_HP1}
 \caption{Curcuito RC High Pass}
+\label{fig:RC_HP1}
 \end{figure}
 
 Le funzioni di trasferimento senza il contributo di $C_{osc}$ e $R_{osc}$, in prima analisi trascurabili, risultano essere:
@@ -382,18 +394,18 @@ Vengono quindi graficati modulo e fase dei dati misurati a confronto con la risp
     \label{fig:RC_fil_res}
 \end{figure}
 
-Come si vede dai grafici \ref{fig:RC_fil} e \ref{fig:RC_fil_res} il modello teorico mostra una notevole compatibilit\'a con i dati raccolti a meno di effetti di ordine superiore che causano deviazioni comunque minime dovute probabilmente al non aver considerato le capacit\'a parassite $R_{osc}$ e $C_{osc}$ per il calcolo della funzione di trasferimento. Un'eccezzione si vede sul grafico corrispondente a $R=99.56 \si{\ohm}$ il quale per frequenze maggiori di $\omega = 3\ \si{\mega\radian\per\second}$ mostra una deviazione molto pi\'u marcata ma comunque spiegabile dalla presenza di componenti parassiti nel circuito che agiscono solamente a frequenze cos\'i alte.
+Come si vede dai grafici \ref{fig:RC_fil} e \ref{fig:RC_fil_res} il modello teorico mostra una notevole compatibilit\'a con i dati raccolti a meno di effetti di ordine superiore che causano deviazioni comunque minime dovute probabilmente al non aver considerato le componenti parassite $R_{osc}$ e $C_{osc}$ per il calcolo della funzione di trasferimento. Un'eccezzione si vede sul grafico corrispondente a $R=99.56 \si{\ohm}$ il quale per frequenze maggiori di $\omega = 3\ \si{\mega\radian\per\second}$ mostra una deviazione molto pi\'u marcata ma comunque spiegabile dalla presenza di componenti parassiti nel circuito che agiscono solamente a frequenze cos\'i alte.
 
 \FloatBarrier
 \newpage
 
 \subsection{Scarica Induttanza}
 
-Si procede ora ad analizzare il comportamento dell'induttanza nel circuito \ref{fig:RL_circ} nella fase di scarica della stessa. Verranno inoltre trascurate le capacita parassite eventualmente presenti, nonch\'e la resistenza interna dell'oscilloscopio verso massa essendo in parallelo ad $R$ di valore molto pi\'u piccolo.
+Si procede ora ad analizzare il comportamento dell'induttanza nel circuito \ref{fig:RL_circ} nella fase di scarica della stessa. Verranno inoltre trascurate le capacità parassite eventualmente presenti, nonch\'e la resistenza interna dell'oscilloscopio verso massa essendo in parallelo ad $R$ di valore molto pi\'u piccolo.
 
 \begin{figure}[h]
 %\renewcommand{\arraystretch}{9}
-\renewcommand{\arraystretch}{9}
+%\renewcommand{\arraystretch}{9}
 \begin{center}
     \begin{circuitikz} []
     \draw
@@ -405,6 +417,7 @@ Si procede ora ad analizzare il comportamento dell'induttanza nel circuito \ref{
         (8,2) to [open, *-*] (8,3);
     \end{circuitikz}
 \end{center}
+\caption{Circuito RL}
 \label{fig:RL_circ}
 \end{figure}
 
@@ -455,16 +468,15 @@ Come \'e stato fatto nel caso della scarica del condensatore viene quindi esegui
 I risultati ottenuti per ogni ripetizione dell'acquisizione con la stessa resistenza vengono mediati e qui esposti: 
 
 \begin{center}
-% TODO: inserire dati
 \begin{tabular}{c|c c c} 
 	$R$ [\si{\ohm}] & $A$ [log(\si{\volt})] & $B$ [\si{\per\second}] & $C$ [\si{\volt}] \\
 	[0.5ex]
 	\hline
-	$ 998.2 $&$ 2.07683\pm 0.00011 $&$ -28986\pm 6 $&$ -0.09284\pm 0.00024 $\\
-	$ 9917.0 $&$ 2.07150\pm 0.00009 $&$ -3068.8\pm 0.6 $&$ -0.09144\pm 0.00012 $\\
-	$ 99660.0 $&$ 1.9875\pm 0.0005 $&$ -336.58\pm 0.20 $&$ -0.0640\pm 0.0006 $\\
-	$ 29820.0 $&$ 2.04916\pm 0.00010 $&$ -1044.13\pm 0.24 $&$ -0.08552\pm 0.00019 $\\
-	$ 373200.0 $&$ 1.7690\pm 0.0004 $&$ -114.31\pm 0.09 $&$ -0.0307\pm 0.0005 $\\
+	$ 20.16 $&$ 0.6361\pm 0.0010 $&$ -6022\pm 13 $&$ 0.0063\pm 0.0007 $ \\
+	$ 46.17 $&$ 1.2051\pm 0.0005 $&$ -7994\pm 8 $&$ -0.0044\pm 0.0005 $ \\
+	$ 98.8 $&$ 1.59056\pm 0.00023 $&$ -12099\pm 5 $&$ -0.0247\pm 0.0006 $ \\
+	$ 149.4 $&$ 1.72880\pm 0.00011 $&$ -16136.2\pm 3.5 $&$ -0.0281\pm 0.0006 $ \\
+	$ 198.3 $&$ 1.79624\pm 0.00018 $&$ -19984\pm 6 $&$ -0.0298\pm 0.0005 $ \\
 \end{tabular}
 \end{center}
 
@@ -480,8 +492,8 @@ Concentrandoci ora su B, si procede quindi ad effettuare un grafico \ref{fig:fig
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.5\textwidth]{fig_tau2.pdf}
-	\label{fig:fig_tau2}
 	\caption{Curva di scarica esponenziale dell'induttore}
+	\label{fig:fig_tau2}
 \end{figure}
 
 Essendo la relazione teorica di tipo lineare (\ref{eq:tauind}) , viene eseguita la regressione a due parametri e si estraggono le quantit\'a $\lambda$ e $\gamma$. Il $\chi$ quadrato corrispondente ($\chi^2_{r,3 \mathrm{dof}}=34$) mostra una possibile sottostima delle incertezze su $B$ e si procede quindi a moltiplicare le stesse per $\sqrt{\chi^2_r}$ in modo da imporre $\chi^2_r=1$.
@@ -497,7 +509,7 @@ Essendo la relazione teorica di tipo lineare (\ref{eq:tauind}) , viene eseguita 
 \end{tabular}
 \end{center}
 
-Il valore di $R_l$ misurato alla prima esperienza era di $0.51 \ \si{\ohm}$ e sembrerebbe quindi che ci sia un qualche tipo di discordanza con il risultato appena ottenuto. Una possibile spiegazione \'e che la misura tramite DMM della resistenza della bobina avviene in modo statico mentre in questo caso viene calcolata attraverso un'analisi delle caratteristiche dinamiche della stessa durante la scarica e quindi potrebbero far parte effetti che non sono stati presi in considerazione. Un ulteriore valore di $R_l$ verr\'a in seguito ottenuto osservando le caratteristiche del picco di risonanza del circuito RLC.
+Il valore di $R_l$ misurato alla prima esperienza era di $0.51 \ \si{\ohm}$ e sembrerebbe quindi che ci sia un qualche tipo di discordanza con il risultato appena ottenuto. Una possibile spiegazione \'e che la misura tramite DMM della resistenza della bobina avviene in modo statico mentre in questo caso viene calcolata attraverso un'analisi delle caratteristiche dinamiche della stessa durante la scarica e quindi potrebbero nascere effetti che non sono stati presi in considerazione. Un ulteriore valore di $R_l$ verr\'a in seguito ottenuto osservando le caratteristiche del picco di risonanza del circuito RLC.
 
 \FloatBarrier
 \newpage
@@ -513,12 +525,13 @@ Si consideri ora il circuito passa banda RLC in figura \ref{fig:RLC}.
         (4,2) to [R, l=$R_l$] (4,4)
         (6,0) node[ground] {} to [C, l=$C_{tot}$] (6,4)
         (8,0) node[ground] {} to [R, l=$R_{osc}$] (8,4)
-        (2,4) to [R, l=$R$] (4,4) to (9,4) node[right]{$V_{out}$}
-        (2,4) to (2,4) to (2,4) node[left]{$V_{in}$}
+        (2,4) to [R, l=$R$] (4,4) to (9,4) node[right] {$V_{out}$}
+        (2,4) node[left] {$V_{in}$}
         (2,4) to [open, *-] (0,0)
         (9,4) to [open, *-] (0,0);
     \end{circuitikz}
 \end{center}
+\caption{Circuito RLC}
 \label{fig:RLC}
 \end{figure}
 
@@ -529,7 +542,7 @@ Si consideri ora il circuito passa banda RLC in figura \ref{fig:RLC}.
 Il valore della capacit\'a $C_l$ \'e stato ottenuto osservando la frequenza di risonanza LC alla quale il filtro produce un massimo di ampiezza in uscita nel caso in cui $C=0 \si{\farad}$ e risulta:
 
 \begin{gather}
-	\omega_0 = \frac{1}{\sqrt{L (C_l + C_{osc})}}\\
+	\omega_0 = \frac{1}{\sqrt{L (C_l + C_{osc})}} = 7.19\E{5}\ \si{\radian \per \second}\\
 	C_l = \frac{1}{\omega_0^2 L} - C_{osc} = 2.27\E{-11} \si{\farad}
 \end{gather}
 
@@ -567,13 +580,13 @@ Vengono ora mostrati i grafici di Bode dei due filtri a confronto con il modello
     \label{fig:RCLfilter}
 \end{figure}
 
-Come si pu\'o notare nel primo caso i residui si distribuiscono in modo sufficientemente uniforme a meno di una minima sottostima delle incertezze quindi risponde come un passa alto a bassa frequenza e passa basso ad alta frequenza. Utilizzando invece la resistenza di valore maggiore i residui mostrano una pi\'u marcata deviazione dal modello, specialmente attorno al picco, e questo pu\'o essere spiegato da eventuali dissipazioni aggiuntive presenti, attriti magnetici nell'induttanza oppure da un sbagliato valore di $R_l$ proveniente dall'analisi svolta nel precedente capitolo.
+Come si pu\'o notare nel primo caso i residui si distribuiscono in modo sufficientemente uniforme e a meno di una minima sottostima delle incertezze quindi risponde come un passa alto a bassa frequenza e passa basso ad alta frequenza. Utilizzando invece la resistenza di valore maggiore i residui mostrano una pi\'u marcata deviazione dal modello, specialmente attorno al picco, e questo pu\'o essere spiegato da eventuali dissipazioni aggiuntive presenti, attriti magnetici nell'induttanza oppure da un sbagliato valore di $R_l$ proveniente dall'analisi svolta nel precedente capitolo.
 
 Dalla teoria i parametri dei circuiti sono:
 
 \begin{gather}
 	\nonumber
-	\omega_0 = \frac{1}{\sqrt{LC}} = 49543\ \si{\radian\per\second} \\
+	\omega_0 = \frac{1}{\sqrt{L(C+c_{osc}+C_l)}} = 49543\ \si{\radian\per\second} \\
 	\nonumber
 	Q = R \sqrt{\frac{C+C_{osc}+C_l}{L}} = 
 	\begin{cases}  
@@ -599,8 +612,8 @@ I cui risultati sono esposti in figura \ref{fig:figp}.
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{figp.pdf}
-\label{fig:figp}
 \caption{Regressione a parabola: in blu i punti sperimentali, in rosso la funzione di trasferimento teorica, in verde il risultato del fit a parabola, in nero $\omega_0$ di risonanza secondo il fit, in arancione ampiezza corrispondente a $|H|_{max}/\sqrt{2}$ ed in magenta le $\omega$ che determinano la larghezza del picco sempre secondo il fit}
+\label{fig:figp}
 \end{figure}
 
 Infine per completare il confronto con la teoria si calcolano i parametri del circuito ricavati dal fit a parabola:
@@ -611,8 +624,8 @@ Infine per completare il confronto con la teoria si calcolano i parametri del ci
 	|H|_{max} = 0.757 
 \end{gather}
 
-Inoltre ora pu\'o essere effettuata una nuova stima del parametro $R_l$ supposto, ragionevolmente, che $\omega_0$ non dipenda $R_l$ o da $R_{osc}$.
-Chiamata $Z$ l'impedenza dell'unione circuitale delle capacita parassite, e non, (qui chiamate $C$ per semplicit\'a) , nonch\'e dell'induttanza e della sua $R_l$ interna:
+Inoltre ora pu\'o essere effettuata una nuova stima del parametro $R_l$ supposto, ragionevolmente, che $\omega_0$ non dipenda da $R_l$ o da $R_{osc}$.
+Chiamata $Z$ l'impedenza dell'unione circuitale delle capacità parassite e non (qui chiamate $C$ per semplicit\'a), nonch\'e dell'induttanza e della sua $R_l$ interna, otteniamo:
 
 \begin{gather}
 	\nonumber
@@ -629,7 +642,7 @@ Chiamata $Z$ l'impedenza dell'unione circuitale delle capacita parassite, e non,
 
 Si suppone inoltre che $Z_0$ abbia parte immaginaria molto minore della parte reale (cosa che effettivamente succede) in modo da scrivere $H_0$, la funzione di trasferimento alla risonanza, come nell'equazione \ref{eq:h0mod}.
 
-Si estrae quindi $R_l$ dalla \ref{eq:z0mod} e $|Z|_0$ dalla \ref{eq:h0mod} per ottenere:
+Si estrae quindi $R_l$ dall'equazione \ref{eq:z0mod} e $|Z|_0$ dalla \ref{eq:h0mod} per ottenere:
 
 \begin{gather}
 	|Z|_0 = \frac{|H|_0 R_{osc} R}{R_{osc} - |H|_0 (R_{osc}+R)} \\
@@ -641,12 +654,13 @@ Se questo nuovo valore $\bar{R_l}$ viene utilizzato per il grafico di Bode teori
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.6\textwidth]{bodeconf.pdf}
+\caption{Nuova regressione a parabola}
 \label{fig:bodeconfr}
 \end{figure}
  
 Come si pu\'o vedere la predizione teorica \'e molto pi\'u coerente con dati misurati questa volta. \\
 
-Invece di aver ipotizzato una $R_l$ sottostimata, come \'e stato fatto, si sarebbe potuta interpretare la discrepanza come se l'induttanza presentasse un valore $L$ che possedeva anche una parte immaginaria che non compariva nella misura dovuta alla sua scarica.
+Invece di aver ipotizzato una $R_l$ sottostimata, come \'e stato fatto, si sarebbe potuta interpretare la discrepanza come se l'induttanza presentasse un valore $L$ in possesso anche di una parte immaginaria che non compariva nella misura dovuta alla sua scarica.
 In tal caso:
 
 \begin{gather}
