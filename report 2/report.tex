@@ -527,8 +527,8 @@ Si consideri ora il circuito passa banda RLC in figura \ref{fig:RLC}.
         (8,0) node[ground] {} to [R, l=$R_{osc}$] (8,4)
         (2,4) to [R, l=$R$] (4,4) to (9,4) node[right] {$V_{out}$}
         (2,4) node[left] {$V_{in}$}
-        (2,4) to [open, *-] (0,0)
-        (9,4) to [open, *-] (0,0);
+        (2,4) to [open, *-*] (9,4);
+        %(9,4) to [open, *-] (0,0);
     \end{circuitikz}
 \end{center}
 \caption{Circuito RLC}
