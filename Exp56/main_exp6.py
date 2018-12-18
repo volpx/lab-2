@@ -10,3 +10,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+#%% FBR
+df1=pd.read_csv('data6/FBR.csv').values
+
+
+#%% FBRD
