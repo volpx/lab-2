@@ -55,7 +55,7 @@ Si pu\'o procedere a calcolare ora la massima ddp che otterrei in funzione della
 
 Come si pu\'o vedere la presenza dei diodi provoca effettivamente un calo di tensione come ci si aspetta e anche l'andamento in funzione del carico \'e quello previsto.
 
-Il ripple invece e mostrato in fig. \ref{fig:vppcconf}.
+Il ripple invece \'e mostrato in fig. \ref{fig:vppcconf}.
 
 \begin{gather}
 	V_{out\, pp} = \frac{i_{l\, max}}{2 f C}
@@ -125,7 +125,7 @@ Chiamata $i_z(V_z)$ la caratteristica tensione-corrente dello zener ed utilizzan
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{fig4.pdf}
-\caption{$V_{out}$ in funzione del carico}
+\caption{$V_{out\, max}$ in funzione del carico}
 \label{fig:vdiod}
 \end{figure}
 
@@ -138,11 +138,41 @@ Considerata $r_z(i_z)$ la resistenza dinamica del diodo, il ripple viene stimato
 	V_{out\, pp} = V_{c\, pp} \frac{r_z}{r_z+R(1+\frac{r_z}{R_l})}
 \end{gather}
 
+E quindi confrontato in figura \ref{fig:vdiodpp} da cui si vede che per valori di carico inferiore al kiloOhm il ripple aumenta fino al $15\%$ di $V_{out\, max}$ (corrispondente a $R_l=100\ \si{\ohm}$). Questo \'e dovuto al fatto che una resistenza $R_l$ minore aumenta la corrente che scorre nella resistenza $R$ che a sua volta diminuisce la tensione in uscita facendo fuoriuscire la non idealit\'a della caratteristica tensione-corrente del diodo zener il quale per correnti piccole soggette a fluttuazioni provoca una fluttuazione della tensione ai capi relativamente maggiore rispetto a correnti mediamente pi\'u intense. Per migliorare le prestazioni per questo range di carichi si suggerisce di diminuire la resistenza $R$ prestando attenzione al fatto che questo provoca una dissipazione di potenza ancora maggiore da parte di $R$ e del diodo nel caso di circuito aperto.
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{fig5.pdf}
-\caption{Ripple in funzione del carico}
+\caption{Ripple in funzione del carico.}
 \label{fig:vdiodpp}
+\end{figure}
+
+Si pu\'o inoltre esaminare la resistenza in uscita $R_{out}$ mostrata dal circuito \ref{fig:rout}.
+
+\begin{gather}
+	R_{out} = \frac{V_{out\, c.a.} - V_{out}}{i_{out}}
+\end{gather}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig6.pdf}
+\caption{$R_{out}$ in funzione del carico.}
+\label{fig:rout}
+\end{figure}
+
+Il costo in termini di potenza dissipata per diminuire il ripple risulta:
+
+\begin{gather}
+	P_d = i_R^2 R + i_z V_{out}
+\end{gather}
+
+Questa potenza persa causa una diminuzione dell'efficienza del circuito al diminuire della corrente assorbita dal carico come si pu\'o vedere in figura \ref{fig:eff}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig7.pdf}
+\caption{Efficienza: $P_{out}$ potenza sul carico, $P_{z}$ potenza dissipata dal diodo zener, $P_{r}$ potenza dissipata dalla resistenza $R$ e $P_{d}$ totale della potenza persa nel filtering.}
+\label{fig:eff}
 \end{figure}
 
 
