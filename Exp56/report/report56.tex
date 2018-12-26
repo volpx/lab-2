@@ -15,40 +15,48 @@
 
 \section{Introduzione}
 
-Questa relazione riassume gli esiti di tre esperienze tutte finalizzate all'adempimento dell'analisi di un circuito RLC svolto durante l'ultima seduta. Per fare ci\'o si \'e sfruttato l'uso di un oscilloscopio il quale, da come si vedr\'a, modifica inevitabilmente le risposte dei circuiti in analisi. A causa di questo è risultato poi necessario derivare i valori delle capacità e delle resistenze parassite che si trovano all'interno dell'oscilloscopio per poi effettuare l'analisi tenendo conto di esse. \\
-
-Successivamente abbiamo studiato la risposta in frequenza del circuito RC nelle diverse configurazioni di filtro passa alto e filtro passa basso, sempre variando le frequenze di taglio. Così facendo si \'e riusciti ad ottenere i diagrammi di Bode corrispondenti che associati alle relative funzioni di trasferimento teoriche forniscono i valori dei componenti usati nei vari casi. Inoltre queste misure sono poi state messe a confronto con i risultati ottenuti precedentemente nella carica e scarica del condensatore, per osservare se risultavano tra loro compatibili. \\
-
-Infine abbiamo considerato anche un induttore, consistente in una bobina realizzata precedentemente. Inizialmente abbiamo studiato un circuito RL per trovate il valore dell'induttanza di questo elemento attraverso diversi cicli di carica e scarica del campo magnetico da esso generato. In seguito è stata posta all'interno di un circuito RLC composto dalla bobina e dal condensatore usato precedentemente di cui si sapeva a questo punto il valore. Ciò ci ha permesso di studiare il funzionamento del circuito passa banda e trovare la sua frequenza di risonanza. \\
-
-Il codice utilizzato in questa esperienza \'e raggiungibile al \href{https://gitlab.com/volpx/lab-2/tree/master/Exp234}{<link>}.
+Nel corso di questa esperienza ci siamo interessati allo studio dei diodi, che sono elementi di circuito non lineari dotati di alcune proprietà che abbiamo avuto modo di osservare. Essi sono composti dalla giunzione di due semiconduttori di tipo diverso, il che li rende degli elementi asimmetrici. Di conseguenza se messi in un senso piuttosto che nell'altro danno risultati diversi: in un caso è permesso il passaggio di corrente $i$, nell'altro invece no. Si prende un diodo posto nella direzione che permette ad $i$ di scorrere. In base alle loro caratteristiche sono stati creati dei modelli che affermano che la caduta di potenziale $\Delta V$ da essi prodotta è approssimativamente costante per ogni valore di $i$, una volta che si è superato un certo valore di soglia. Ciò risulta comunque valido solo all'interno di un certo margine di approssimazione. Invece se si hanno $i$ negative, cioè dirette in senso inverso, si ha che superato un certo valore il diodo si surriscalda e si fonde. Perciò è permessa solo una polarizzazione diretta.\\ 
+Nel prosieguo dell'esperienza sono stati introdotti anche i diodi Zener, il cui comportamento risulta simile ai diodi normali sotto certi aspetti, ma di gran lunga diverso per altri. Il diodo Zener infatti permette sia una polarizzazione diretta che una inversa. Garantisce cioè una $\Delta V$ molto stabile attorno ad un particolare valore qualunque sia $i$ che scorre nel circuito. \\
+Questi elementi sono stati usati nel corso di questa esperienza per costruire un ponte di Graetz (altrimenti detto raddrizzatore di onda intera). Si tratta di un alimentatore a differenza di potenziale costante. Infatti vengono sfruttati i diodi per rendere sempre uguale la $\Delta V$ prodotta da un trasformatore, che sarebbe quindi variabile nel tempo.
 
 \newpage
 
 \section{Materiali e strumenti}
 
 \begin{itemize}
-  \item diodi 1N4007 oggetto di analisi
-  
+  \item 4 diodi 1N4007
+  \item Un diodo Zener BZX85C 5V1 
+  \item Multimetro digitale (DMM)
+  \item Trasformatore
+  \item Tester analogico (ICE)
+  \item Un condensatore elettrolitico
+  \item Varie resistenze di diverse dimensioni da usare a seconda dei casi
+  \item Oscilloscopio
+  \item Breadboard
+  \item Cavi "banana-banana"
+  \item Decade di resistenze
+  \item ?
+  \item Un condensatore ?
+  \item Generatore di funzioni d'onda ?
+  \item ? 
+%TODO: Non mi viene in mente altro, ma di sicuro ho dimenticato qualcosa
 \end{itemize}
 
 \newpage
 
 \section{Procedure di misura}
 
-Innanzitutto è stato necessario montare il circuito RC per osservare la scarica del condensatore come suggerito dalla scheda fornita \ref{fig:RC_LP}. Ad esso andava poi collegato l'oscilloscopio tramite i cavi coassiali all'ingresso ed all'uscita del circuito. Abbiamo impostato il generatore di funzioni in modo che  producesse lo scalino da $\Delta V$ a $0\ V$ , e in questa configurazione \'e stato osservato l'andamento in uscita dell'onda nella fase di scarica. Sono stati utilizzati 5 diversi valori di resistenza con lo stesso condensatore in modo da avere tempi caratteristici $\tau$ differenti e per ognuno sono state salvate 6 forme d'onda con l'oscilloscopio impostato a 16 averagings. Ciò ha fornito un numero sufficiente di dati per poi poter trovare i parametri relativi ad eventuali componenti parassiti, dato che in seguito la procedura \'e stata ripetuta senza il condensatore in esame, supplito dalla capacit\'a intrinseca di cavi e ADC dell'oscilloscopio. Tutti i valori di resistenza utilizzati sono stati misurati con il DMM. \\
-
-Successivamente lo stesso circuito \'e stato studiato come filtro, analizzando la sua risposta ad un ingresso sinusoidale in funzione della frequenza applicata. Sono stati scelti valori di resistenza che ci dessero valori della frequenza di taglio specifici. Il generatore di funzioni \'e stato impostato a $V_{PP} = 2\div 4 V$ con frequenze distribuite esponenzialmente per una decade e \textonehalf \ prima e dopo la frequenza di taglio. Quindi sono stati da noi trascritti i valori di ampiezza in entrata ed uscita dal circuito assieme allo sfasamento tra i due forniti dall'oscilloscopio tramite le sue funzioni di misura in modo da poter creare il diagramma di Bode. Infine abbiamo applicato una resistenza in modo da caricare il circuito ed in queste condizioni \'e stata misurata l'impedenza in uscita del filtro con due diverse frequenze. La procedura è stato ripetuta con la configurazione passa alto \ref{fig:RC_HP1}, per un unico valore di resistenza. \\
-
-
-In seguito si è considerata una bobina costruita precedentemente e con essa è stato costruito un circuito RL. Per fare ciò la bobina è stata inserita all'interno di un core di materiale ferromagnetico, il quale aveva il ruolo di amplificare l'induttanza da esso prodotta. Si è innanzitutto ancora usata un'onda quadra dal generatore di funzioni, con diverse configurazioni di resistenze in modo da studiarne la scarica. Si è poi montato un circuito RLC passa banda, sfruttando come induttore ancora la bobina e come condensatore l'elemento di circuito usato precedentemente. Si è impostato il generatore di funzioni in modo da realizzare un'onda sinusoidale applicata a due diverse configurazioni di valori di resistenza. Si è studiato ciò modificando i valori della frequenza, infittendo la risoluzione in concomitanza della frequenza di risonanza del circuito. \\
+Per prima cosa abbiamo costruito un semplice circuito, il quale aveva come unico elemento un diodo. Abbiamo fatto ciò semplicemente per poterne studiare le caratteristiche e la sua relativa curva $i-V$, in polarizzazione diretta, per evitare che il diodo si surriscaldasse o che si creassero problemi nel circuito. Abbiamo adottato misure di $i$ comprese fra gli $0mA$ e i $300mA$. Essendo che eravamo interessati ad avere corrente che passasse solo in una certa direzione abbiamo alimentato il circuito in corrente continua, con il generatore DC. Per effettuare le misure abbiamo sfruttato in contemporanea DMM e tester ICE. Il primo ci è servito per misurare la $\Delta V$ ai capi del del diodo preso in considerazione, mentre il secondo lo abbiamo utilizzato per avere una misura di $i$ che passa attraverso di esso. Abbiamo ripetuto questa stessa operazione con quattro diodi diversi, sebbene solo su uno di essi abbiamo deciso di prendere un numero elevato di valori. \\
+Abbiamo seguito lo stesso procedimento anche con un diodo Zener, questa volta però in polarizzazione inversa, poiché gli è permesso dalle sue caratteristiche fisiche sopra spiegate. In questo caso abbiamo scelto valori di corrente compresi tra $1mA$ e $150mA$. Abbiamo alimentato il circuito con il generatore DC e per effettuare le misure abbiamo nuovamente sfruttato ICE e DMM. \\
+Abbiamo quindi proseguito nell'esperienza con la costruzione di un ponte di Graetz. Abbiamo collegato il circuito ad un trasformatore con uscite $0 - 7.5 VRMS$, utilizzando un resistore avente resistenza di carico $R_L \ = \ 1 \ k \Omega$ ed un condensatore elettrolitico di capacità $C \ = \ 200 \ \mu F$. A ciò si è aggiunta una resistenza in serie $R \ = \ 100 \ \Omega$. E' stato variato il valore di $R_L$ diverse volte, per valori compresi fra i $100 \ \Omega$ e una situazione di circuito aperto, con cioè l'assenza di qualsiasi corrente che scorre per il circuito. Lo stesso viene fatto anche inserendo un diodo Zener nel circuito come stabilizzatore al valore di $5.1 \ V$. Si è in questo caso sfruttato un oscilloscopio per effettuare le misure.
 
 \newpage
 
 %%%%%%%%%%%%% ANAL-isis %%%%%%%%%%%%%%%%%%%
 \section{Analisi dei dati}
 
-Verranno ora analizzati i dati ottenuti per ogni configurazione.
+L'esperienza è stata divisa in due parti: nella prima sono state studiate le caratteristiche di alcuni diodi rettificatori e di un diodo Zener, nella seconda invece ciò è stato applicato allo studio del ponte di Graetz.
+
 \input{sub_diodes.tex}
 \input{sub_bridge.tex}
 

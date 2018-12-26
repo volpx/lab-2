@@ -188,7 +188,7 @@ ax4.set_ylabel('V max [V]')
 ax4.grid()
 ax4.legend()
 
-fig4.savefig('report/fig4.pdf')
+#fig4.savefig('report/fig4.pdf')
 
 
 fig5=plt.figure()
@@ -204,10 +204,10 @@ ax5.set_yscale('log')
 ax5.set_xlabel('R load [Ω]')
 ax5.set_ylabel('V pp [V]')
 ax5.grid(which='major',alpha=1)
-ax5.grid(which='minor',alpha=.35)
+ax5.grid(which='minor',alpha=.2)
 ax5.legend()
 
-fig5.savefig('report/fig5.pdf')
+#fig5.savefig('report/fig5.pdf')
 
 #fig3=plt.figure()
 #fig3.suptitle('Ripple ratio')
@@ -221,8 +221,8 @@ fig5.savefig('report/fig5.pdf')
 #ax3.grid()
 
 #%% Rout
-vout_ca=np.max(vout_max_e)
-Rout=(vout_ca-vout_max_e)/iout_max
+vout_ca=np.max(vout_max_e)-0.5*vout_pp_e[vout_pp_e.size-1]
+Rout=(vout_ca-(vout_max_e-0.5*vout_pp_e))/((vout_max_e-0.5*vout_pp_e)/Rl)
 
 fig6=plt.figure()
 fig6.suptitle('Rout')
@@ -232,8 +232,39 @@ ax6.plot(Rl,Rout,'b.')
 ax6.set_xscale('log')
 ax6.set_ylabel('Rout [Ω]')
 ax6.set_xlabel('R load [Ω]')
-ax6.grid()
+ax6.grid(which='major',alpha=1)
+ax6.grid(which='minor',axis='x',alpha=.2)
+
+#fig6.savefig('report/fig6.pdf')
 
 #%% Efficiency
 
+pout=vout_max_e**2/Rl
+
+pz=iz_max*vout_max_e
+pr=(vc_max_e-vout_max_e)**2/100
+pd=pr + pz
+
+fig7 = plt.figure()
+fig7.suptitle('Efficiency')
+ax7 = fig7.add_subplot(111)
+
+ax7.plot(Rl,pout,'b.:',label='Pout')
+ax7.plot(Rl,pz,'r.:',label='P z')
+ax7.plot(Rl,pr,'m.:',label='P r')
+ax7.plot(Rl,pd,'g.:',label='P d')
+ax7b=ax7.twinx()
+ax7b.plot(Rl,pout/(pout+pd),'k.:',label='efficiency')
+
+ax7.set_xscale('log')
+ax7.set_yscale('log')
+ax7.set_xlabel('R load [Ω]')
+ax7.set_ylabel('Power [W]')
+ax7b.set_ylabel('efficiency []')
+ax7.plot(np.nan, 'k.:', label = 'efficiency')
+ax7.legend()
+
+ax7.grid()
+
+#fig7.savefig('report/fig7.pdf')
 
