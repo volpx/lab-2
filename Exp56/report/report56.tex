@@ -5,7 +5,7 @@
 \title{Diodi}
 %\subtitle{Caratteristiche e ponte di Graetz}
 \author{Filippo Dal Farra \and Matteo Zandegiacomo Orsolina}
-\date{10 Dicembre 2018}
+\date{Gennaio 2018}
 
 \begin{document}
 
@@ -15,11 +15,12 @@
 
 \section{Introduzione}
 
-Nel corso di questa esperienza ci siamo interessati allo studio dei diodi, che sono elementi di circuito non lineari dotati di alcune proprietà che abbiamo avuto modo di osservare. Essi sono composti dalla giunzione di due semiconduttori di tipo diverso, il che li rende degli elementi asimmetrici. Di conseguenza se messi in un senso piuttosto che nell'altro danno risultati diversi: in un caso è permesso il passaggio di corrente $i$, nell'altro invece no. Si prende un diodo posto nella direzione che permette ad $i$ di scorrere. In base alle loro caratteristiche sono stati creati dei modelli che affermano che la caduta di potenziale $\Delta V$ da essi prodotta è approssimativamente costante per ogni valore di $i$, una volta che si è superato un certo valore di soglia. Ciò risulta comunque valido solo all'interno di un certo margine di approssimazione. Invece se si hanno $i$ negative, cioè dirette in senso inverso, si ha che superato un certo valore il diodo si surriscalda e si fonde. Perciò è permessa solo una polarizzazione diretta.\\ 
-Nel prosieguo dell'esperienza sono stati introdotti anche i diodi Zener, il cui comportamento risulta simile ai diodi normali sotto certi aspetti, ma di gran lunga diverso per altri. Il diodo Zener infatti permette sia una polarizzazione diretta che una inversa. Garantisce cioè una $\Delta V$ molto stabile attorno ad un particolare valore qualunque sia $i$ che scorre nel circuito. \\
-Questi elementi sono stati usati nel corso di questa esperienza per costruire un ponte di Graetz (altrimenti detto raddrizzatore di onda intera). Si tratta di un alimentatore a differenza di potenziale costante. Infatti vengono sfruttati i diodi per rendere sempre uguale la $\Delta V$ prodotta da un trasformatore, che sarebbe quindi variabile nel tempo.
+Nel corso di questa esperienza ci siamo interessati allo studio dei diodi, i quali sono elementi di circuito non lineari dotati di alcune proprietà che abbiamo avuto modo di osservare. Essi sono composti da una giunzione P-N, il che li rende degli elementi asimmetrici. Di conseguenza se messi in un senso piuttosto che nell'altro si comportano in modo diverso: in un caso permettono il passaggio di corrente, nell'altro la interdicono. 
+%non vuol dire un cazzo di niente: Si prende un diodo posto nella direzione che permette ad $i$ di scorrere. 
+In base alle loro caratteristiche sono stati creati dei modelli che affermano che corrente che la caduta di potenziale $\Delta V$ da essi prodotta \'e approssimativamente costante in funzione di $i$, una volta che si è superato un certo valore di soglia.\\ 
 
-\newpage
+Nel prosieguo dell'esperienza sono stati introdotti anche i diodi Zener, il cui comportamento risulta simile ai diodi normali sotto certi aspetti, ma di gran lunga diverso per altri. Il diodo Zener infatti permette sia una polarizzazione diretta che una inversa. Garantisce cioè una $\Delta V$ molto stabile attorno ad un particolare valore ($5.1\ \si{\volt}$ nel nostro caso) qualunque sia $i$ che gli scorre attraverso. \\
+Questi elementi sono stati usati nel corso di questa esperienza per costruire un ponte di Graetz (altrimenti detto raddrizzatore ad onda intera). Si tratta di un rettificatore che poi \'e stato stabilizzato con filtro capacitivo e regolatore a diodo Zener. Infatti vengono sfruttati i diodi per rendere continua e stabile la tensione di alimentazione alternata.
 
 \section{Materiali e strumenti}
 
@@ -27,28 +28,26 @@ Questi elementi sono stati usati nel corso di questa esperienza per costruire un
   \item 4 diodi 1N4007
   \item Un diodo Zener BZX85C 5V1 
   \item Multimetro digitale (DMM)
-  \item Trasformatore
+  \item Trasformatore step-down $\SI{220}{\volt}$ - $\SI{7.5}{\volt}$
   \item Tester analogico (ICE)
-  \item Un condensatore elettrolitico
-  \item Varie resistenze di diverse dimensioni da usare a seconda dei casi
+  \item Generatore di tensione variabile
+  \item Un condensatore elettrolitico $\SI{200}{\micro\farad}$
+  \item Resistenze varie
   \item Oscilloscopio
   \item Breadboard
   \item Cavi "banana-banana"
   \item Decade di resistenze
-  \item ?
-  \item Un condensatore ?
-  \item Generatore di funzioni d'onda ?
-  \item ? 
-%TODO: Non mi viene in mente altro, ma di sicuro ho dimenticato qualcosa
 \end{itemize}
-
-\newpage
 
 \section{Procedure di misura}
 
-Per prima cosa abbiamo costruito un semplice circuito, il quale aveva come unico elemento un diodo. Abbiamo fatto ciò semplicemente per poterne studiare le caratteristiche e la sua relativa curva $i-V$, in polarizzazione diretta, per evitare che il diodo si surriscaldasse o che si creassero problemi nel circuito. Abbiamo adottato misure di $i$ comprese fra gli $0mA$ e i $300mA$. Essendo che eravamo interessati ad avere corrente che passasse solo in una certa direzione abbiamo alimentato il circuito in corrente continua, con il generatore DC. Per effettuare le misure abbiamo sfruttato in contemporanea DMM e tester ICE. Il primo ci è servito per misurare la $\Delta V$ ai capi del del diodo preso in considerazione, mentre il secondo lo abbiamo utilizzato per avere una misura di $i$ che passa attraverso di esso. Abbiamo ripetuto questa stessa operazione con quattro diodi diversi, sebbene solo su uno di essi abbiamo deciso di prendere un numero elevato di valori. \\
-Abbiamo seguito lo stesso procedimento anche con un diodo Zener, questa volta però in polarizzazione inversa, poiché gli è permesso dalle sue caratteristiche fisiche sopra spiegate. In questo caso abbiamo scelto valori di corrente compresi tra $1mA$ e $150mA$. Abbiamo alimentato il circuito con il generatore DC e per effettuare le misure abbiamo nuovamente sfruttato ICE e DMM. \\
-Abbiamo quindi proseguito nell'esperienza con la costruzione di un ponte di Graetz. Abbiamo collegato il circuito ad un trasformatore con uscite $0 - 7.5 VRMS$, utilizzando un resistore avente resistenza di carico $R_L \ = \ 1 \ k \Omega$ ed un condensatore elettrolitico di capacità $C \ = \ 200 \ \mu F$. A ciò si è aggiunta una resistenza in serie $R \ = \ 100 \ \Omega$. E' stato variato il valore di $R_L$ diverse volte, per valori compresi fra i $100 \ \Omega$ e una situazione di circuito aperto, con cioè l'assenza di qualsiasi corrente che scorre per il circuito. Lo stesso viene fatto anche inserendo un diodo Zener nel circuito come stabilizzatore al valore di $5.1 \ V$. Si è in questo caso sfruttato un oscilloscopio per effettuare le misure.
+Per prima cosa abbiamo costruito un semplice circuito di misura con amperometro monte e alimentato dal generatore di tensione DC variabile. Abbiamo fatto ciò semplicemente per poterne studiare le caratteristiche e la sua relativa curva $i-V$, in polarizzazione diretta. Abbiamo adottato misure di $i$ comprese fra gli $1mA$ e i $300mA$ distribuite esponenzialmente. Per effettuare le misure \'e stato sfruttato in contemporanea DMM e tester ICE. Il primo ci è servito per misurare la $\Delta V$ ai capi del del diodo preso in considerazione, mentre il secondo lo abbiamo utilizzato per avere una misura di $i$ che passa attraverso di esso. Abbiamo ripetuto questa stessa operazione con quattro diodi diversi, sebbene solo su uno di essi abbiamo deciso di prendere un numero elevato di valori. \\
+
+Abbiamo seguito lo stesso procedimento anche con un diodo Zener, questa volta però in polarizzazione inversa, poiché gli è permesso dalle sue caratteristiche fisiche sopra spiegate. In questo caso abbiamo scelto valori di corrente compresi tra $1mA$ e $150mA$. \'E stato alimentato il circuito con il generatore DC e per effettuare le misure abbiamo nuovamente sfruttato ICE e DMM. \\
+
+Nella seconda parte dell'esperienza \'e stato costruito un ponte di Graetz in uscita al secondario di un trasformatore step-down a presa centrale (di cui \'e stata presa solo una met\'a) da $\SI{200}{\volt}$ a $\SI{7.5}{\volt}$ secondo in circuito in fig. \ref{fig:brid_cfilter}. Le misure di tensione sul carico sono state prese con il DMM e l'oscilloscopio in funzione del carico applicato tramite la decade di resistenze da $\SI{100}{\ohm}$ a circuito aperto.
+
+\'E stato poi applicato l'ulteriore stadio di filtering con il diodo Zener secondo il circuito \ref{fig:bridgez} e le misurazioni sono state effettuate nuovamente.
 
 \newpage
 
@@ -58,6 +57,15 @@ Abbiamo quindi proseguito nell'esperienza con la costruzione di un ponte di Grae
 L'esperienza è stata divisa in due parti: nella prima sono state studiate le caratteristiche di alcuni diodi rettificatori e di un diodo Zener, nella seconda invece ciò è stato applicato allo studio del ponte di Graetz.
 
 \input{sub_diodes.tex}
+
 \input{sub_bridge.tex}
+
+\newpage
+
+\section{Conclusioni}
+In conclusione i diodi mostrano effettivamente l'andamento esponenziale in corrente-tensione tipico di una giunzione P-N.
+La loro applicazione nel ponte di Graetz \'e di incalcolabile utilit\'a nel mondo moderno in cui tutta l'elettronica che abbiamo a disposizione funziona in tensioni continue mentre la tensione di rete \'e alternata.
+Per il filtraggio il solo condensatore fornisce l'efficienza massima essendo ovviamente un componente solo reattivo a discapito di accettare un ripple in uscita. Questo tipo di compromesso pu\'o essere accettabile in molte applicazioni come ad esempio in entrata ad un ulteriore stadio di filtraggio per poi ottenere un'uscita pi\'u pulita oppure per il driving di componenti come motori DC o illuminazione.
+L'utilizzo di un diodo Zener fornisce effettivamente gli effetti voluti ma il suo impiego risulta effettivo solamente se il carico non richiede troppa corrente. Per questo motivo \'e realmente impiegato solo come ultimo stadio di alimentazione per sensoristica ecc. In tutti gli altri casi si preferisce un buck converter per la sua elevata efficienza e scalabilit\'a.
 
 \end{document}

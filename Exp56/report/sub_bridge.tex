@@ -29,11 +29,10 @@ Verr\'a prima preso in esame il ponte di graetz come rettificatore a doppia semi
 \label{fig:bridge}
 \end{figure}
 
-Il condensatore elettrolitico scelto $C=220\ \si{\micro\farad}$ ha lo scopo di stabilizzare la doppia semionda in uscita dal ponte risultando nell'onda in fig \ref{fig:brid_cfilter}.
+Il condensatore elettrolitico scelto $C=220\ \si{\micro\farad}$ ha lo scopo di filtrare la doppia semionda in uscita dal ponte risultando nell'onda in fig \ref{fig:brid_cfilter}.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-% TODO: substitute the image asking to someone for data
 \includegraphics[width=\textwidth]{cripplefilter.pdf}
 \caption{In blu la forma d'onda in uscita con il condensatore ($Rl=200\ \si{\ohm}$) ed in arancione se esso non ci fosse (quest'ultima forma d'onda \'e stata generata numericamente non potendole osservare contemporaneamente)}
 \label{fig:brid_cfilter}
@@ -122,14 +121,15 @@ Chiamata $i_z(V_z)$ la caratteristica tensione-corrente dello zener ed utilizzan
 	V_{out\, max} = V_{c\, max} - i_{R\, max} R
 \end{gather}
 
-\begin{figure}[h]
+
+Come si pu\'o vedere la presenza dello stadio ulteriore di filtraggio diminuisce l'output del circuito e il confronto \'e mostrato in figura \ref{fig:vdiod}.
+
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{fig4.pdf}
 \caption{$V_{out\, max}$ in funzione del carico}
 \label{fig:vdiod}
 \end{figure}
-
-Come si pu\'o vedere la presenza dello stadio ulteriore di filtraggio diminuisce l'output del circuito.
 
 Considerata $r_z(i_z)$ la resistenza dinamica del diodo, il ripple viene stimato in questo modo:
 
@@ -138,7 +138,7 @@ Considerata $r_z(i_z)$ la resistenza dinamica del diodo, il ripple viene stimato
 	V_{out\, pp} = V_{c\, pp} \frac{r_z}{r_z+R(1+\frac{r_z}{R_l})}
 \end{gather}
 
-E quindi confrontato in figura \ref{fig:vdiodpp} da cui si vede che per valori di carico inferiore al kiloOhm il ripple aumenta fino al $15\%$ di $V_{out\, max}$ (corrispondente a $R_l=100\ \si{\ohm}$). Questo \'e dovuto al fatto che una resistenza $R_l$ minore aumenta la corrente che scorre nella resistenza $R$ che a sua volta diminuisce la tensione in uscita facendo fuoriuscire la non idealit\'a della caratteristica tensione-corrente del diodo zener il quale per correnti piccole soggette a fluttuazioni provoca una fluttuazione della tensione ai capi relativamente maggiore rispetto a correnti mediamente pi\'u intense. Per migliorare le prestazioni per questo range di carichi si suggerisce di diminuire la resistenza $R$ prestando attenzione al fatto che questo provoca una dissipazione di potenza ancora maggiore da parte di $R$ e del diodo nel caso di circuito aperto.
+E quindi confrontato in figura \ref{fig:vdiodpp} da cui si vede che per valori di carico inferiore al kiloOhm il ripple aumenta fino al $15\%$ di $V_{out\, max}$ (corrispondente a $R_l=100\ \si{\ohm}$). Questo \'e dovuto al fatto che una resistenza $R_l$ minore aumenta la corrente che scorre nella resistenza $R$ che a sua volta diminuisce la tensione in uscita facendo lavorare il diodo su di una retta di carico passante per la parte non ideale della caratteristica tensione-corrente del diodo Zener il quale per correnti piccole soggette a fluttuazioni provoca una fluttuazione della tensione ai capi relativamente maggiore rispetto a correnti mediamente pi\'u intense. Per migliorare le prestazioni per questo range di carichi si suggerisce di diminuire la resistenza $R$ prestando attenzione al fatto che questo provoca una dissipazione di potenza ancora maggiore da parte di $R$ e del diodo nel caso di circuito aperto.
 
 \begin{figure}[h]
 \centering
@@ -147,18 +147,20 @@ E quindi confrontato in figura \ref{fig:vdiodpp} da cui si vede che per valori d
 \label{fig:vdiodpp}
 \end{figure}
 
-Si pu\'o inoltre esaminare la resistenza in uscita $R_{out}$ mostrata dal circuito \ref{fig:rout}.
+Si pu\'o inoltre esaminare la resistenza in uscita $R_{out}$ mostrata dal circuito, fig. \ref{fig:rout}.
 
 \begin{gather}
 	R_{out} = \frac{V_{out\, c.a.} - V_{out}}{i_{out}}
 \end{gather}
 
-\begin{figure}[H]
+\begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{fig6.pdf}
 \caption{$R_{out}$ in funzione del carico.}
 \label{fig:rout}
 \end{figure}
+
+\FloatBarrier
 
 Il costo in termini di potenza dissipata per diminuire il ripple risulta:
 
