@@ -10,7 +10,7 @@ Created on Thu Oct 11 09:07:26 2018
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-#from uncertainties import ufloat
+from uncertainties import ufloat
 
 def w_mean(data,weigth=None):
     if weigth.any():
@@ -228,7 +228,9 @@ def fit_plot(x,y,model,
     return fig,(ax_top,ax_bot)
 
 def par(z1,z2):
-    # circuit parallel
+    """
+        circuit parallel
+    """
     return 1/(1/z1+1/z2)
 
 def find_divisions(file):
@@ -275,7 +277,78 @@ def find_divisions(file):
             dt*=1e-9
 
         return dv,dt
+def fit_sine_poly(t,x,polyord,freqs,err=None,t0=0,center=False,tran=None):
+    """
+        LSQ routine that fits data x(t) to a polynomial (order polyord) and any
+        number of cos / sin terms with frequencies listed in freqs
 
+        INPUT:
+            t: input t
+            x: input x
+            polyord: order of the polinomial
+            freqs: list of frequancies
+
+        OUTPUT:
+            fitout: [a0, a1, ..., a_polyord, C1, S1, C2, S2, ...]
+            dfit_out: literally fitout with a d before
+            C: covariance matrix
+            chi2: chi2 when errors are given
+            N_DOF: number of degrees of freedom
+    """
+
+    if tran is not None:
+        inds=(tran[0]<=t) & (t<=tran[1])
+        tin=t[inds]
+        xin=x[inds]
+    else:
+        tin=t
+        xin=x
+
+    if err is None:
+        err=1
+
+    if center:
+        t_c = np.mean(tin)
+    else:
+        t_c=0
+
+    F = np.empty((xin.size,polyord))
+
+    for m in range(polyord):
+        f = (tin-t_c)**m
+        F[:,m]=f
+
+    freqs=np.array(freqs)
+    Ftmp=np.empty((xin.size,2*freqs.size))
+    if freqs.size > 0:
+        for m in range(freqs.size):
+            Ftmp[:,2*m] = np.cos(2*np.pi*freqs[m]*(tin-t0))
+            Ftmp[:,2*m+1] = np.sin(2*np.pi*freqs[m]*(tin-t0))
+
+    F=np.append(F,Ftmp,axis=1)
+    M = F.shape[1]
+    G = np.empty((M,M))
+    V = np.empty((M,))
+    for i in range(M):
+        V[i] = np.sum(F[:,i] * xin / err**2)
+        for j in range(M):
+            G[i,j] = np.sum(F[:,i] * F[:,j] / err**2)
+
+    C=np.inv(G)
+    fit_out = C * V
+
+    x_fit = F*fit_out
+    dx_res = xin -x_fit
+    N_DOF=xin.size - fit_out.size
+    dx_mean = np.sum(dx_res) / N_DOF
+
+    chi2=np.sum(dx_res**2/err**2)/N_DOF
+
+    dfit_out = np.sqrt(np.diag(C))
+
+    sigma = np.sqrt(np.sum(dx_res**2)/N_DOF)
+
+######################### SHIT PAST THIS #######################################
 class DataXY:
     def __init__(self,
                  x,
