@@ -112,11 +112,11 @@ def general_regression(F,y,dy=None):
 
     return lam,dlam,C,chi2red,dof,y_res_m,y_res_rms
 
-def bode_plot(x, H, dB=True,
+def bode_plot(x, H, dB=False,
               xerr=None,Herr=None,err=False,
-              x_label='ω [rad * s^-1]',y_label='H',
+              x_label='f [s^-1]',y_label='H',
               y_lim_mod=None,fmt='b.',title=None,
-              ext_fig=None):
+              label='None',ext_fig=None):
     """
         x: (N,) the x coordinates, usually rad/s
         H: (N,2) matrix with module and phase of H function for each x
@@ -136,7 +136,7 @@ def bode_plot(x, H, dB=True,
     elif H.ndim is 1:
         #each element of H is a complex number
         H_mod=np.abs(H[:])
-        H_phase=np.angle(H[:])
+        H_phase=np.angle(H[:])*180/np.pi
 
     if ext_fig is None:
         fig=plt.figure()
@@ -153,7 +153,7 @@ def bode_plot(x, H, dB=True,
 
         y_label='|'+y_label+'|' + ('dB' if dB else '')
         ax_top.set_ylabel(y_label)
-        ax_bot.set_ylabel('φ [rad]')
+        ax_bot.set_ylabel('φ [deg]')
         ax_bot.set_xlabel(x_label)
 
         ax_bot.grid()
@@ -227,11 +227,17 @@ def fit_plot(x,y,model,
         fig.savefig(save,bbox_inches="tight")
     return fig,(ax_top,ax_bot)
 
-def par(z1,z2):
+def _par(z1,z2):
     """
         circuit parallel
     """
     return 1/(1/z1+1/z2)
+
+def par(*zs):
+    """
+        circuit parallel
+    """
+    return 1/(np.sum([1/z for z in zs]))
 
 def find_divisions(file):
     '''
@@ -312,9 +318,9 @@ def fit_sine_poly(t,x,polyord,freqs,err=None,t0=0,center=False,tran=None):
     else:
         t_c=0
 
-    F = np.empty((xin.size,polyord))
+    F = np.empty((xin.size,polyord+1))
 
-    for m in range(polyord):
+    for m in range(polyord+1):
         f = (tin-t_c)**m
         F[:,m]=f
 
@@ -334,11 +340,11 @@ def fit_sine_poly(t,x,polyord,freqs,err=None,t0=0,center=False,tran=None):
         for j in range(M):
             G[i,j] = np.sum(F[:,i] * F[:,j] / err**2)
 
-    C=np.inv(G)
-    fit_out = C * V
+    C=np.linalg.inv(G)
+    fit_out = C @ V
 
-    x_fit = F*fit_out
-    dx_res = xin -x_fit
+    x_fit = F @ fit_out
+    dx_res = xin - x_fit
     N_DOF=xin.size - fit_out.size
     dx_mean = np.sum(dx_res) / N_DOF
 
@@ -347,6 +353,8 @@ def fit_sine_poly(t,x,polyord,freqs,err=None,t0=0,center=False,tran=None):
     dfit_out = np.sqrt(np.diag(C))
 
     sigma = np.sqrt(np.sum(dx_res**2)/N_DOF)
+
+    return fit_out,dfit_out, C, chi2, N_DOF
 
 ######################### SHIT PAST THIS #######################################
 class DataXY:
