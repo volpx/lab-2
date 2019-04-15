@@ -23,7 +23,7 @@ Tuttavia per l'analisi \'e comodo che il segnale in ingresso sia un coseno puro 
 	t_0=-\frac{\phi}{\omega} \\
 	t \rightarrow t-t_0
 \end{gather}
-I coefficienti $A$ e $B$ possono essere riassunti da un unico numero immaginario in modo che:
+I coefficienti $A$ e $B$ possono essere riassunti da un unico numero immaginario trascurando il bias DC $V_0$ in modo che:
 \begin{gather}
 	V_{in}(t)=V_{0\ in}+V_{in}\cos (\omega t) \\
 	V_{out}(t)=V_{0\ out}+A\cos (\omega t)+B\sin (\omega t)= V_{0\ out}+C \cos (\omega t+\phi) =\\
@@ -32,14 +32,15 @@ I coefficienti $A$ e $B$ possono essere riassunti da un unico numero immaginario
 	\mathbf{Im}[V_{out}]=-B=-C\sin (\phi) \\
 	V_{out}=A-jB
 \end{gather}
-Quindi per ogni misurazione effettuata ho ottenuto due coppie di coefficienti $A$ $B$, una per l'ingresso e una per l'uscita.
-Sulle misure ripetute nelle stesse condizioni (5 nel nostro caso) viene eseguita la media aritmetica dei valori.\\
+Quindi per ogni misurazione effettuata si ottengono due coppie di coefficienti $A$ $B$, una per l'ingresso e una per l'uscita.
+Sulle misure ripetute nelle stesse condizioni (5 nel nostro caso) viene eseguita la media aritmetica dei valori e presa come incertezza la deviazione standard diviso $\sqrt{5}$.\\
 Vengono quindi mostrati in figura \ref{fig:complan} gli effetti delle piccole variazioni di impedenza sulla risposta del ponte di misura.
 \begin{figure}[h]
 	\centering
     \includegraphics[width=\textwidth]{Figure_7.pdf}
-    \label{fig:complan}
+    
     \caption{Plot di $V_{out}$ misurata sul piano immaginario.}
+    \label{fig:complan}
 \end{figure}
 Si vede dalla figura come l'aggiunta di una componente puramente passiva non modifica sensibilmente la fase in uscita mentre se possiede componenti reattive l'effetto su $V_{out}$ \'e quello di uno sfasamento rappresentato da componenti immaginarie prominenti rispetto a quelle reali.\\
 Per discriminare ulteriormente gli effetti si procede ad analizzare i vari casi separatamente.
@@ -82,7 +83,7 @@ E si ottengono i risultati seguenti:
 	\frac{\partial \mathbf{Im}[V_{out}]}{\partial \delta C_x} = (-4.4456+/-0.0010)\E{6} \ \si{\volt\per\farad} \ @ \  700 \ \si{\hertz}\\
 	\frac{\partial \mathbf{Im}[V_{out}]}{\partial \delta C_x} = (-1.25414+/-0.00029)\E{7} \ \si{\volt\per\farad} \ @ \  2000 \ \si{\hertz}
 \end{gather}
-Tuttavia i $\chi^2_{red}$ sono rispettivamente $3343$,$0.9$,$790$ e $22981$ i quali non mostrano compatibilit\'a con la teoria se non nel secondo caso, si procede quindi ad assumere una sottostima delle incertezze che vengono quindi ampliate di conseguenza imponendo $\chi^2_{red}=1$ come \'e gi\'a stato mostrato nei plot in figura \ref{fig:deltaz}. Si ottengono quindi i valori (precedenti) con le nuove incertezze:
+Tuttavia i $\chi^2_{red}$ sono rispettivamente $3343$, $0.9$, $790$ e $22981$ i quali non mostrano compatibilit\'a con la teoria se non nel secondo caso, si procede quindi ad assumere una sottostima delle incertezze che vengono quindi ampliate di conseguenza imponendo $\chi^2_{red}=1$ come \'e gi\'a stato mostrato nei plot in figura \ref{fig:deltaz}. Si ottengono quindi i valori (precedenti) con le nuove incertezze:
 \begin{gather}
 	\frac{\partial \mathbf{Re}[V_{out}]}{\partial \delta R_x} = 0.0229+/-0.0007 \ \si{\ampere} \\
 	\frac{\partial \mathbf{Im}[V_{out}]}{\partial \delta C_x} = (-1.27+/-0.10)\E{6} \ \si{\volt\per\farad} \ @ \  200 \ \si{\hertz}\\

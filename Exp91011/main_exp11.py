@@ -318,7 +318,7 @@ iStmp=1
 mu0=1.2566e-6
 Area=np.pi*r**2
 ms=N*iStmp*Area
-Bz=mu0*2*ms/(4*np.pi*(ds)**3)/2
+Bz=mu0*2*ms/(4*np.pi*(ds)**3)
 Bflux=N*Bz*Area
 M=Bflux/iStmp
 ax6.errorbar(x=ds,y=M,fmt='r-')

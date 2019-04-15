@@ -15,7 +15,7 @@ Per l'acquisizione delle forme d'onda vengono prese le medesime accortezze della
     \caption{Ampiezza dell'induzione e della corrente sulla sorgente al variare della frequenza.}
     \label{fig:induz}
 \end{figure}
-Dati i plot dei dati raccolti in figura \ref{fig:induz} si pu\'o procedere a calcolare il coefficiente di mutua induzione:
+Dati i plot dei dati raccolti in figura \ref{fig:induz} si pu\'o procedere a calcolare il coefficiente di mutua induzione tra bobina sorgente e ricevente definendo $\epsilon_R$ la f.e.m. ai capi della ricevente in ingresso all'amplificatore e $i_S$ la corrente che scorre nella bobina sorgente misurata sapendo la tensione ai capi di $R_{lim}$:
 \begin{gather}
 	Z_{eff}(\omega) = \frac{\epsilon_R(\omega)}{i_S(\omega)}= \frac{V_{out}(\omega)}{G_{diff}(\omega) i_S(\omega)} \\
 \end{gather}
@@ -30,30 +30,33 @@ Viene quindi scelto come valore di $M_{RS}$ la media alle varie frequenze:
 	M_{RS,abs}=2.0916\E{-6}\ \si{\henry} \\
 	M_{RS,angle}=-2.8758 \ \si{\deg}
 \end{gather}
-Come si pu\'o vedere il valore non e' puramente reale come ci si aspetterebbe ma presenta una parte immaginaria, tuttavia la fase risultante \'e talmente ridotta che non da un contributo significativo pertanto il risultato \'e compatibile con una misura di induttanza. \\
+Come si pu\'o vedere il valore non e' puramente reale come ci si aspetterebbe ma a causa della non nulla resistivit\'a del filo presenta una parte immaginaria, tuttavia la fase risultante \'e talmente prossima a zero che non da un contributo significativo pertanto il risultato \'e compatibile con una misura di induttanza. \\
 Viene quindi mostrato in figura \ref{fig:zeff} il confronto dell'impedenza di questa induttanza di accoppiamento con la $Z_{eff}$ misurata cos\'i da verificare che effettivamente il modello valga.
 \begin{figure}[h]
 	\centering
     \includegraphics[width=\textwidth]{Figure_15.pdf}
-    \label{fig:zeff}
+    
     \caption{Confronto tra $Z_{eff}$ in blu e l'impedenza del coefficiente di mutua induzione in rosso.}
+    \label{fig:zeff}
 \end{figure}
 La deviazione della fase, seppur di pochi gradi, pu\'o essere attribuita ad effetti di ordine maggiore qui non presi in considerazione.\\
 
 Si analizza ora l'andamento dell'induzione all'aumentare della distanza, figura \ref{fig:brut}.
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
     \includegraphics[width=\textwidth]{Figure_16.pdf}
-    \label{fig:brut}
+    
     \caption{Confronto a varie distanze in funzione della frequenza.}
+    \label{fig:brut}
 \end{figure}
-L'andamento della fase non \'e quello aspettato e dovrebbe essere indagato pi\'u a fondo con nuovi dati, tuttavia il mi aspetto che il modulo aumenti con la frequenza come \'e successo precedentemente.\\
+L'andamento della fase non \'e quello aspettato e dovrebbe essere indagato pi\'u a fondo con nuovi dati ed un nuovo setup, tuttavia mi aspetto che il modulo aumenti con la frequenza come \'e successo precedentemente.\\
 Viene ora scelta la frequenza di $200\ \si{\kilo\hertz}$ per la quale ho dati a tutte le distanze e viene mostrato in figura \ref{fig:r3} il coefficiente di mutua induzione calcolato dalle misure di tensione in entrata ed in uscita comparato all'induzione che un dipolo magnetico esercita su una spira che si muove lungo l'asse di simmetria.\\
 \begin{figure}[h]
 	\centering
     \includegraphics[width=\textwidth]{Figure_17.pdf}
-    \label{fig:r3}
+    
     \caption{Mutua induzione in funzione della distanza.}
+    \label{fig:r3}
 \end{figure}
 In rosso \'e mostrato il modello teorico:
 \begin{gather}

@@ -383,6 +383,38 @@ ax5.plot(t,x_out,'-',label='R+5δR')
 ax5.set_xlabel('Time [s]')
 ax5.set_ylabel('Vout [V]')
 ax5.legend()
+#%%
+fig7=plt.figure()
+fig7.suptitle('Balanced bridge')
+ax7=fig7.add_subplot(111)
+ax7.set_ylabel('Vout [V]')
+ax7.set_xlabel('Time [s]')
+for i in range(5):
+    # import the dataframe
+    fname='u{}.csv'.format(i+1)
+    df=pd.read_csv('data/osccapt1/'+fname,skiprows=[1],header=0)
+    
+    # extract the quantities
+    t=df['x-axis']
+    x_in=df['1']
+    x_out=df['2']
+    f=200
+    w=2*np.pi*f
+    dx=0.03*np.max(x_in)
+    
+    # first tmp fit to find to then subtract the phase
+    fit_tmp=fit_sine_poly(t=t, x=x_out, polyord=0, freqs=[f], err=dx)
+    
+    # extract fit
+    V0=fit_tmp[0][0]
+    A=fit_tmp[0][1]
+    B=fit_tmp[0][2]
+    C=np.sqrt(A**2+B**2)
+    phi=-np.arctan2(B,A)
+    t0=-(phi/w)
+    
+    # plot
+    ax7.errorbar(x=t-t0,y=x_out-V0,fmt='-')
 
 #%%
 fig6=plt.figure()

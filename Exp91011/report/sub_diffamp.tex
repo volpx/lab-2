@@ -18,7 +18,7 @@
 
 Vengono ora mostrati i risultati dei guadagni nelle diverse configurazioni e gli eventuali confronti \ref{fig:gains}.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \begin{minipage}{0.5\textwidth}
         \centering
@@ -52,13 +52,13 @@ Nella riga inferiore sono mostrati i miglioramenti che si ottengono separatament
 Si procede quindi al confronto con un modello di alcune quantit\'a. \\
 Il guadagno $G_{diff}$ pu\'o essere calcolato in modo pi\'u preciso con la formula:
 \begin{gather}
-	G_{diff}=\frac{R_C}{2*(R_E+r_e(i_0))}
+	G_{diff}=\frac{R_C}{2(R_E+r_e(i_0))}
 \end{gather}
 Quindi sapendo che $G_{diff\ max}=35.65$ si pu\'o ottenere il valore di $r_e$:
 \begin{gather}
 	r_e(i_0)=\frac{R_C-2 G_{diff} R_E}{2 G_{diff}}=40\si{\ohm}
 \end{gather}
-la quale \'e in linea con quello che ci aspetteremmo per la resistenza di emettitore di un BJT data la corrente $i_0$.
+la quale \'e in linea con quello che ci aspetteremmo per la resistenza di emettitore di un BJT data la corrente $i_0=0.72\ \si{\milli\ampere}$.
 
 L'impedenza in parallelo al generatore di corrente $Z_S$ pu\'o essere estratta dai dati secondo:
 \begin{gather}
@@ -92,17 +92,18 @@ Nuovamente la fase misurata di $Z_S$ non \'e affidabile per via del rumore nella
     \end{center}
 \end{figure}
 
-La funzione di trasferimento per il guadagno differenziale tenuto conto del circuito di misura misurato \ref{fig:Gdiffmodel} \'e:
+La funzione di trasferimento per il guadagno differenziale tenuto conto del circuito di misura \ref{fig:Gdiffmodel} \'e:
 \begin{gather}
 	H=G_{diff} \frac{R_{osc} \pars \frac{1}{j\omega C_{osc}}}{R_{osc} \pars \frac{1}{j\omega C_{osc}} + \frac{1}{j\omega C_{out}} + R_C}
 \end{gather}
-la quale pu\'o essere confrontata, ponendo i valori ottenuti nelle precedenti esperienze per $C_{osc}=110\si{\pico\farad}$ $R_{osc}=1\si{\mega\ohm}$ e il condensatore $C_{out}=100\si{\nano\farad}$ posto in uscita con i dati sperimentali ottenuti in figura \ref{fig:gain_model}.
+la quale pu\'o essere confrontata, ponendo i valori ottenuti nelle precedenti esperienze per $C_{osc}=110\si{\pico\farad}$ $R_{osc}=1\si{\mega\ohm}$ e il condensatore $C_{out}=100\si{\nano\farad}$ posto in uscita, con i dati sperimentali ottenuti in figura \ref{fig:gain_model}.
 
 \begin{figure}[h]
 	\centering
     \includegraphics[width=\textwidth]{Figure_6.pdf}
-    \label{fig:gain_model}
+    
     \caption{Gain in funzione della frequenza, in blu i punti sperimentali e in rosso la curva del modello.}
+    \label{fig:gain_model}
 \end{figure}
  
  
